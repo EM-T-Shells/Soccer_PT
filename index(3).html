@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Soccer Comeback Protocol</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { background: #0a0a0a; font-family: 'Courier New', monospace; color: #f0f0f0; padding-bottom: 90px; }
+  .header { background: linear-gradient(135deg, #1a1a1a 0%, #111 100%); border-bottom: 2px solid #222; padding: 20px 20px 14px; }
+  .kicker-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .kicker { font-size: 11px; letter-spacing: 4px; color: #666; }
+  .title { font-size: 22px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+  .subtitle { font-size: 10px; color: #666; margin-top: 7px; letter-spacing: 2px; }
+  .progress-wrap { margin-top: 14px; }
+  .progress-labels { display: flex; justify-content: space-between; font-size: 10px; color: #555; margin-bottom: 4px; letter-spacing: 2px; }
+  .progress-track { height: 3px; background: #222; border-radius: 2px; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease, background 0.3s; width: 0%; }
+
+  .edit-toggle { background: transparent; border: 1px solid #333; color: #888; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 10px; letter-spacing: 2px; font-family: inherit; }
+  .edit-toggle.on { border-color: #F97316; color: #F97316; }
+
+  /* Day selector */
+  .days { display: flex; gap: 6px; padding: 12px 16px 0; }
+  .day { flex: 1; padding: 12px 4px; background: #141414; border: 1px solid #242424; border-radius: 6px; color: #555; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; }
+  .day.active { background: #1c1c1c; }
+  .day-letter { font-size: 18px; font-weight: 900; letter-spacing: 0; }
+  .day-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 2px; color: #555; }
+
+  .theme-bar { margin: 12px 16px 0; padding: 8px 14px; border-radius: 6px; font-size: 10px; letter-spacing: 2px; text-align: center; }
+
+  .tabs { display: flex; border-bottom: 1px solid #222; margin-top: 12px; }
+  .tab { flex: 1; padding: 11px 3px; background: transparent; border: none; border-bottom: 2px solid transparent; color: #444; cursor: pointer; font-size: 9px; letter-spacing: 1px; font-family: inherit; transition: all 0.2s; }
+  .tab.active { background: #1a1a1a; }
+  .tab-icon { font-size: 15px; margin-bottom: 2px; }
+  .tab-count { font-size: 8px; color: #555; margin-top: 2px; }
+
+  .phase-note { margin: 14px 16px 0; padding: 10px 14px; background: #131313; border: 1px solid #242424; border-radius: 6px; font-size: 10px; color: #888; letter-spacing: 1px; line-height: 1.5; white-space: pre-line; }
+
+  .exercises { padding: 12px 16px 0; }
+  .card { background: #141414; border: 1px solid #242424; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+  .card.done { background: #111; border-color: #2a2a2a; border-left-color: #333 !important; opacity: 0.5; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .card-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card-name { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+  .card.done .card-name { text-decoration: line-through; color: #444; }
+  .knee-tag { font-size: 8px; background: #1a2a1a; color: #4ade80; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #2a4a2a; }
+  .card-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .card-time { font-size: 10px; letter-spacing: 1px; }
+  .card-gear { font-size: 10px; color: #555; letter-spacing: 1px; }
+  .check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; font-size: 11px; }
+  .card.done .check { border-color: #333 !important; background: #333; }
+  .card-cues { font-size: 11px; color: #888; line-height: 1.6; border-top: 1px solid #1e1e1e; padding-top: 8px; margin-top: 4px; white-space: pre-line; }
+  .card-cues.empty { display: none; }
+
+  .edit-controls { display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #1e1e1e; padding-top: 10px; }
+  .mini-btn { flex: 1; background: #1c1c1c; border: 1px solid #2c2c2c; color: #aaa; padding: 7px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
+  .mini-btn.danger { color: #f87171; border-color: #3a1f1f; }
+  .mini-btn:disabled { opacity: 0.3; }
+  .add-btn { width: 100%; background: transparent; border: 1px dashed #333; color: #666; padding: 14px; border-radius: 6px; font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
+
+  .note { margin: 16px; padding: 14px 16px; border-radius: 6px; }
+  .note-green { background: #0f1a0f; border: 1px solid #1a3a1a; }
+  .note-blue { background: #0f0f1a; border: 1px solid #1a1a3a; margin-top: 0; }
+  .note-title { font-size: 9px; letter-spacing: 3px; margin-bottom: 8px; }
+  .note-green .note-title { color: #4ade80; }
+  .note-blue .note-title { color: #818cf8; }
+  .note-body { font-size: 11px; line-height: 1.7; white-space: pre-line; }
+  .note-green .note-body { color: #6b8f6b; }
+  .note-blue .note-body { color: #5a5a8f; }
+
+  .bottom-bar { display: flex; gap: 8px; padding: 0 16px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+  .bar-btn { background: transparent; border: 1px solid #333; color: #555; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 10px; letter-spacing: 1px; font-family: inherit; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: flex-start; justify-content: center; z-index: 100; padding: 20px; overflow-y: auto; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: #161616; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; width: 100%; max-width: 460px; margin-top: 30px; }
+  .modal h3 { font-size: 14px; letter-spacing: 2px; margin-bottom: 16px; color: #F97316; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 9px; letter-spacing: 2px; color: #666; margin-bottom: 5px; }
+  .field input, .field textarea { width: 100%; background: #0d0d0d; border: 1px solid #2c2c2c; color: #f0f0f0; padding: 10px; border-radius: 5px; font-family: inherit; font-size: 12px; }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .checkbox-field { display: flex; align-items: center; gap: 8px; }
+  .checkbox-field input { width: auto; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .modal-actions button { flex: 1; padding: 11px; border-radius: 5px; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: inherit; }
+  .btn-save { background: #F97316; border: none; color: #000; font-weight: 700; }
+  .btn-cancel { background: transparent; border: 1px solid #333; color: #888; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="kicker-row">
+      <span class="kicker">SOCCER COMEBACK — V6</span>
+      <button class="edit-toggle" id="editToggle">✎ EDIT</button>
+    </div>
+    <div class="title">4-DAY TRAINING CYCLE</div>
+    <div class="subtitle" id="subtitle">WARM-UP · PT · SPRINT · CONDITIONING</div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span id="progressLabel">DAY A PROGRESS</span><span id="progressCount">0/0 DONE</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <div class="days" id="days"></div>
+  <div class="theme-bar" id="themeBar"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="phaseNote"></div>
+  <div class="exercises" id="exercises"></div>
+
+  <div class="note note-green">
+    <div class="note-title">HOW THE CYCLE WORKS</div>
+    <div class="note-body">• Rotate through Workout A → B → C → D, then repeat. Warm-up is the same every day.
+
+• Each day pairs different PT + sprint work so you never hammer one quality two sessions in a row — better for recovery and the knee.
+
+• Conditioning is easy Zone 2 (20-30 min) on A, B, C, and one harder Threshold session on D. Keep the Zone 2 days genuinely easy so Day D and your sprint work stay sharp.
+
+• Discomfort during adaptation = okay. Sharp pain or swelling = stop.</div>
+  </div>
+
+  <div class="note note-blue">
+    <div class="note-title">WHAT'S NEW IN V6</div>
+    <div class="note-body">Restructured into a 4-day cycle (A/B/C/D) with a dedicated Sprint section. Your full exercise library is now distributed across the four days for balance instead of stacked into one. Everything stays editable — tap EDIT to add, change, reorder, or delete any exercise on the day you're viewing. Editing the warm-up changes it for every day, since it's shared.</div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="bar-btn" id="resetBtn">RESET THIS DAY</button>
+    <button class="bar-btn" id="exportBtn">EXPORT</button>
+    <button class="bar-btn" id="importBtn">IMPORT</button>
+    <button class="bar-btn" id="factoryBtn">RESTORE DEFAULT</button>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3 id="modalTitle">EDIT EXERCISE</h3>
+      <div class="field"><label>NAME</label><input id="f-name" type="text"></div>
+      <div class="field"><label>TIME / SETS / REPS</label><input id="f-time" type="text"></div>
+      <div class="field"><label>GEAR</label><input id="f-gear" type="text"></div>
+      <div class="field"><label>CUES / NOTES</label><textarea id="f-cues"></textarea></div>
+      <div class="field checkbox-field"><input id="f-knee" type="checkbox"><label style="margin:0">KNEE ✓ TAG</label></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modalCancel">CANCEL</button>
+        <button class="btn-save" id="modalSave">SAVE</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+function ex(name, time, gear, cues, knee){ return { name, time, gear: gear||"", cues: cues||"", knee: !!knee }; }
+
+const DEFAULT_DATA = {
+  warmup: {
+    note: "Same warm-up every day. Run it top to bottom before the day's work.",
+    exercises: [
+      ex("Hip Circle March", "60 sec", "Bodyweight", "March in place, exaggerate hip rotation each step. Loosen the hips, not just the legs.", false),
+      ex("Ankle Rolls + Toe Taps", "30 sec each foot", "Bodyweight", "Roll ankles full circles, then tap toes rapidly. Wakes up proprioception — first thing to go after a long break.", false),
+      ex("Lateral Shuffle (short + slow)", "3 x 5 yards each direction", "Bodyweight", "Stay low, short steps, controlled pace. Teaching your knee to handle lateral force. Discomfort is okay, sharp pain is not.", true),
+      ex("Defensive Slide Steps", "3 x 5 yards each direction", "Bodyweight", "Wide stance, hips low, drive off the outside foot. Adds glute engagement which protects the knee.", true),
+      ex("Backwards Jog", "3 x 15 yards", "Bodyweight", "Jog backwards at easy pace. Loads the quads differently and reduces knee impact.", true),
+      ex("Soft Direction Change Jog", "4 x 10 yards", "Bodyweight or 2 cones", "Jog and gently redirect at 30-45 degrees — no hard plant. Just a gradual curve.", true),
+      ex("Duck Walk", "2 x 5 yards (build to 10)", "Bodyweight", "Full squat, up on toes, hands on Achilles, walk forward low. START SHORT — deep knee flexion can aggravate chondromalacia. Check knees next morning before adding distance.", true),
+      ex("High Knees", "4 x 10 yards", "Bodyweight", "Drive knees to hip height, quick ground contact, stay tall and springy.", false),
+      ex("Heel Ups (Butt Kicks)", "4 x 10 yards", "Bodyweight", "Heels to glutes, fast turnover, stay on the balls of your feet.", false),
+      ex("Jog Jump", "2 x 20 yards", "Bodyweight", "Easy jog into a controlled two-foot jump every few strides. Soft, absorbed landings.", false),
+      ex("Coin Pickers", "2 x 20 yards", "Bodyweight", "Jog and dip to 'pick up a coin' every few yards — a controlled single-leg hinge. Opens hips and hamstrings.", false),
+    ]
+  },
+  days: {
+    A: { label: "WORKOUT A", theme: "ACCELERATION / LINEAR POWER", color: "#3B82F6",
+      pt: [
+        ex("Single-Leg Hurdle Hops (Forward)", "3 sets x 10", "Agility hurdles", "On one leg, hop over each hurdle without putting the foot down. Stick each landing for control. (PT HEP)", true),
+        ex("Pogos", "3 sets x 10 reps", "Bodyweight", "Max bounce in place. Stiff ankles, minimal knee bend — pure elastic rebound off the ground.", true),
+        ex("Line Hops", "1 set x 20 hops / Leg", "Bodyweight", "Fast single-leg hops back and forth over a line. Builds ankle stiffness and knee control.", true),
+        ex("Single-Legged Jumps", "3 sets x 5 hops / Leg", "Bodyweight", "Single-leg hops for distance. Stick each landing — this is your single-leg stability work.", true),
+      ],
+      sprint: [
+        ex("A-Skips", "3 x 20m", "Bodyweight", "Skip driving one knee to hip height, opposite arm, quick ground contact. Core sprint mechanics drill.", false),
+        ex("Push-Up Start Sprints", "3 sprints", "Bodyweight", "Start lying in a push-up position, pop up and accelerate hard. 20m. Reaction + acceleration.", false),
+        ex("Kneeling Start Sprints", "3 sprints", "Bodyweight", "From a kneeling start, explode up into a 20m sprint. Trains the drive phase out of a low position.", false),
+      ],
+      conditioning: [
+        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, you could nose-breathe the whole time. Zone 2 heart rate. Zero knee impact, builds your aerobic base. Keep it genuinely easy.", false),
+      ]
+    },
+    B: { label: "WORKOUT B", theme: "LATERAL / MULTIDIRECTIONAL", color: "#8B5CF6",
+      pt: [
+        ex("Ladder In & Out Hops — Single Leg", "3 sets x 10", "Agility ladder", "Stand beside the ladder. On one leg, hop your foot in and out of each square without touching the rungs. Quiet landings. (PT HEP)", true),
+        ex("Lateral Jumps", "5 reps per Leg", "3 cones", "Jump forward to a cone, then to the right/left cone, alternating. Controlled lateral landings.", true),
+        ex("Skater Jumps", "5 sets / Leg", "3 cones", "Zig-zag bounding between cones — L-R-L then R-L-R. Land and stick on one leg each time. Big for lateral knee stability.", true),
+        ex("Multidirectional 1", "1 set / Leg", "Bodyweight", "Single-leg pattern: R - L - R - B, then L - R - L - B. Hop the pattern and stabilize each landing.", true),
+      ],
+      sprint: [
+        ex("B-Skips", "3 sets x 20m", "Bodyweight", "Like an A-skip but extend the lower leg out and 'paw' it back to the ground. Hamstring + sprint mechanics.", false),
+        ex("Flying Sprints", "3 x 20m", "Bodyweight", "Start by hopping, gradually build speed, hit top speed in the last 5 yards, then gradually slow down. No hard stops.", false),
+      ],
+      conditioning: [
+        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, Zone 2 heart rate. Zero knee impact. Keep it genuinely easy so your harder days stay sharp.", false),
+      ]
+    },
+    C: { label: "WORKOUT C", theme: "REACTIVE / ELASTIC POWER", color: "#EC4899",
+      pt: [
+        ex("Ladder Zig-Zag Hops — Single Leg", "3 sets x 10", "Agility ladder", "On one leg, hop into a square then diagonally forward and out, alternating sides down the ladder. (PT HEP)", true),
+        ex("Ladder Skiers", "3 sets x 10", "Agility ladder", "Face the side of the ladder, one foot in the first square. Quickly jump-switch your feet (skiing motion) down the ladder. (PT HEP)", true),
+        ex("Lateral Broad Jumps", "1 set x 20 reps / Leg", "Bodyweight", "Start facing perpendicular, jump and twist 90 degrees, landing balanced. Reactive rotational power.", true),
+        ex("Lateral Jump Backs", "1 x 20 / Leg", "Bodyweight", "Jump laterally, then a quick step back to the middle. Trains quick re-centering and deceleration.", true),
+      ],
+      sprint: [
+        ex("Sprint-Float-Sprint", "3 sprints", "Bodyweight", "30m: sprint 10 yards, 'float' (relax but hold speed) 5 yards, sprint again. Teaches relaxed top speed.", false),
+        ex("Broad Jumps", "2 sets x 4 jumps", "Bodyweight", "Two-foot horizontal jump for max distance. Land soft, absorb through the hips, fully reset each rep.", false),
+        ex("Triple Jump", "2 sets per Leg", "Bodyweight", "Hop - Step - Jump, alternating the lead foot. Horizontal power and single-leg force absorption.", true),
+      ],
+      conditioning: [
+        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, Zone 2 heart rate. Zero knee impact. Recovery-paced, keep it easy.", false),
+      ]
+    },
+    D: { label: "WORKOUT D", theme: "DECELERATION / THRESHOLD", color: "#EF4444",
+      pt: [
+        ex("Ladder 2 Forward, 1 Back", "3 sets x 10", "Agility ladder", "Both feet hop into square 1, then 2, then hop one square back. Continue two-forward / one-back down the ladder. (PT HEP)", true),
+        ex("Plyometric Jumps Over Ball", "3 sets x 10", "BOSU ball", "Rounded side up, one foot center, other on the floor. Squat, jump and switch feet across the dome. Alternate every jump. (PT HEP)", true),
+        ex("Multidirectional 2 (One Leg)", "1 set / leg", "Bodyweight", "Single-leg pattern: R - R - R - B, then L - L - L - B. Stabilize every landing on the same leg.", true),
+        ex("Cone Shuffle (moderate)", "4 x 20 sec on / 15 sec rest", "3 cones in a line", "Cones 2 yards apart. Shuffle laterally cone to cone, touch each one. Controlled, change-of-direction conditioning.", true),
+      ],
+      sprint: [
+        ex("Sprint + Brake (Deceleration)", "6 x 8 yards", "Bodyweight or 2 cones", "Sprint 8 yards, stop as controlled as possible. Deceleration is harder on the knees than acceleration — training it is what protects you. Absorb through hips and glutes.", true),
+      ],
+      conditioning: [
+        ex("Threshold Workout", "20-30 min", "Bike or run", "Your one hard cardio day. Comfortably-hard sustained effort near threshold — e.g. 4-5 x 3-4 min hard / 2 min easy, or a steady 20 min tempo. Bike if knees are cranky, run if they feel good. Keep A/B/C truly easy to earn this one.", false),
+      ]
+    }
+  }
+};
+
+const SECTION_META = {
+  warmup:       { id: "warmup",       label: "WARM-UP",      icon: "🔥", color: "#F97316" },
+  pt:           { id: "pt",           label: "PT / REHAB",   icon: "🦵", color: "#14B8A6" },
+  sprint:       { id: "sprint",       label: "SPRINT",       icon: "⚡", color: "#EAB308" },
+  conditioning: { id: "conditioning", label: "CONDITIONING", icon: "🚴", color: "#10B981" },
+};
+
+const DATA_KEY = "soccerRoutineDataV6";
+const VER_KEY = "soccerRoutineVerV6";
+const VERSION = 6;
+const DONE_KEY = "soccerRoutineDoneV6";
+
+let DATA, done, activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
+
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+
+function loadData(){
+  try {
+    const v = parseInt(localStorage.getItem(VER_KEY) || "0", 10);
+    const s = localStorage.getItem(DATA_KEY);
+    if (s && v >= VERSION) { DATA = JSON.parse(s); }
+    else { DATA = deepClone(DEFAULT_DATA); saveData(); }
+  } catch(e){ DATA = deepClone(DEFAULT_DATA); }
+}
+function saveData(){
+  try { localStorage.setItem(DATA_KEY, JSON.stringify(DATA)); localStorage.setItem(VER_KEY, String(VERSION)); } catch(e){}
+}
+function loadDone(){ try { const s = localStorage.getItem(DONE_KEY); done = s ? new Set(JSON.parse(s)) : new Set(); } catch(e){ done = new Set(); } }
+function saveDone(){ try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch(e){} }
+
+// Build the 4 live "phase" objects for the active day. Exercise arrays are live references into DATA.
+function currentPhases(){
+  const day = DATA.days[activeDay];
+  return [
+    { ...SECTION_META.warmup,       note: DATA.warmup.note, exercises: DATA.warmup.exercises },
+    { ...SECTION_META.pt,           note: "", exercises: day.pt },
+    { ...SECTION_META.sprint,       note: "", exercises: day.sprint },
+    { ...SECTION_META.conditioning, note: "", exercises: day.conditioning },
+  ];
+}
+
+function keyFor(phase, i){ return activeDay + "|" + phase.id + "|" + i; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function renderDays(){
+  const el = document.getElementById("days"); el.innerHTML = "";
+  Object.keys(DATA.days).forEach(k=>{
+    const d = DATA.days[k];
+    const btn = document.createElement("div");
+    btn.className = "day" + (k===activeDay ? " active" : "");
+    if(k===activeDay){ btn.style.borderColor = d.color; }
+    btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div><div class="day-sub">${k===activeDay? '● ':''}${d.theme.split(' / ')[0]}</div>`;
+    btn.onclick = ()=>{ activeDay = k; activePhase = 0; render(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderThemeBar(){
+  const d = DATA.days[activeDay];
+  const el = document.getElementById("themeBar");
+  el.textContent = d.label + " · " + d.theme;
+  el.style.background = d.color + "1a";
+  el.style.color = d.color;
+  el.style.border = "1px solid " + d.color + "33";
+}
+
+function renderTabs(){
+  const el = document.getElementById("tabs"); el.innerHTML = "";
+  const phases = currentPhases();
+  phases.forEach((p,i)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab" + (i===activePhase?" active":"");
+    if(i===activePhase){ btn.style.borderBottomColor=p.color; btn.style.color=p.color; }
+    btn.innerHTML = `<div class="tab-icon">${p.icon}</div>${p.label}<div class="tab-count">${p.exercises.length} ex</div>`;
+    btn.onclick = ()=>{ activePhase=i; render(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderPhaseNote(){
+  const el = document.getElementById("phaseNote");
+  const p = currentPhases()[activePhase];
+  el.innerHTML = (p.note && p.note.length) ? `<div class="phase-note">${escapeHtml(p.note)}</div>` : "";
+}
+
+function renderExercises(){
+  const el = document.getElementById("exercises"); el.innerHTML = "";
+  const phase = currentPhases()[activePhase];
+  phase.exercises.forEach((exr,i)=>{
+    const key = keyFor(phase, i);
+    const isDone = done.has(key);
+    const card = document.createElement("div");
+    card.className = "card" + (isDone && !editMode ? " done" : "");
+    card.style.borderLeft = "3px solid " + ((isDone && !editMode) ? "#333" : phase.color);
+    let html = `
+      <div class="card-top">
+        <div style="flex:1">
+          <div class="card-name-row">
+            <span class="card-name">${escapeHtml(exr.name)}</span>
+            ${exr.knee ? '<span class="knee-tag">KNEE ✓</span>' : ''}
+          </div>
+          <div class="card-meta">
+            ${exr.time ? `<span class="card-time" style="color:${phase.color}">⏱ ${escapeHtml(exr.time)}</span>` : ''}
+            ${exr.gear ? `<span class="card-gear">🎒 ${escapeHtml(exr.gear)}</span>` : ''}
+          </div>
+        </div>
+        ${editMode ? '' : `<div class="check" style="border-color:${isDone?'#333':phase.color}">${isDone?'✓':''}</div>`}
+      </div>
+      <div class="card-cues ${exr.cues ? '' : 'empty'}">${escapeHtml(exr.cues)}</div>`;
+    if(editMode){
+      html += `
+      <div class="edit-controls">
+        <button class="mini-btn" data-act="up" ${i===0?'disabled':''}>▲</button>
+        <button class="mini-btn" data-act="down" ${i===phase.exercises.length-1?'disabled':''}>▼</button>
+        <button class="mini-btn" data-act="edit">✎ EDIT</button>
+        <button class="mini-btn danger" data-act="del">✕</button>
+      </div>`;
+    }
+    card.innerHTML = html;
+    if(editMode){
+      card.querySelectorAll(".mini-btn").forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); handleEditAction(b.dataset.act,i); }; });
+    } else {
+      card.onclick = ()=>{ done.has(key)?done.delete(key):done.add(key); saveDone(); render(); };
+    }
+    el.appendChild(card);
+  });
+  if(editMode){
+    const add = document.createElement("button");
+    add.className = "add-btn"; add.textContent = "+ ADD EXERCISE";
+    add.onclick = ()=> openModal(activePhase, null);
+    el.appendChild(add);
+  }
+}
+
+function handleEditAction(act, i){
+  const arr = currentPhases()[activePhase].exercises;
+  if(act==="up" && i>0){ [arr[i-1],arr[i]]=[arr[i],arr[i-1]]; saveData(); render(); }
+  else if(act==="down" && i<arr.length-1){ [arr[i+1],arr[i]]=[arr[i],arr[i+1]]; saveData(); render(); }
+  else if(act==="edit"){ openModal(activePhase, i); }
+  else if(act==="del"){ if(confirm("Delete \"" + arr[i].name + "\"?")){ arr.splice(i,1); saveData(); render(); } }
+}
+
+function openModal(phaseIndex, exerciseIndex){
+  editTarget = { phaseIndex, exerciseIndex };
+  const isEdit = exerciseIndex !== null;
+  document.getElementById("modalTitle").textContent = isEdit ? "EDIT EXERCISE" : "ADD EXERCISE";
+  const arr = currentPhases()[phaseIndex].exercises;
+  const e = isEdit ? arr[exerciseIndex] : { name:"", time:"", gear:"", cues:"", knee:false };
+  document.getElementById("f-name").value = e.name;
+  document.getElementById("f-time").value = e.time;
+  document.getElementById("f-gear").value = e.gear;
+  document.getElementById("f-cues").value = e.cues;
+  document.getElementById("f-knee").checked = e.knee;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal(){ document.getElementById("modal").classList.remove("show"); editTarget=null; }
+
+function saveModal(){
+  const data = {
+    name: document.getElementById("f-name").value.trim() || "Untitled",
+    time: document.getElementById("f-time").value.trim(),
+    gear: document.getElementById("f-gear").value.trim(),
+    cues: document.getElementById("f-cues").value.trim(),
+    knee: document.getElementById("f-knee").checked,
+  };
+  const arr = currentPhases()[editTarget.phaseIndex].exercises;
+  if(editTarget.exerciseIndex === null){ arr.push(data); }
+  else { arr[editTarget.exerciseIndex] = data; }
+  saveData(); closeModal(); render();
+}
+
+function renderProgress(){
+  const phases = currentPhases();
+  let total=0, dc=0;
+  phases.forEach(p=>p.exercises.forEach((e,i)=>{ total++; if(done.has(keyFor(p,i))) dc++; }));
+  const d = DATA.days[activeDay];
+  document.getElementById("progressLabel").textContent = "DAY " + activeDay + " PROGRESS";
+  document.getElementById("progressCount").textContent = dc + "/" + total + " DONE";
+  const fill = document.getElementById("progressFill");
+  fill.style.width = (total ? Math.round((dc/total)*100) : 0) + "%";
+  fill.style.background = d.color;
+}
+
+function render(){ renderDays(); renderThemeBar(); renderTabs(); renderPhaseNote(); renderExercises(); renderProgress(); }
+
+document.getElementById("editToggle").onclick = function(){
+  editMode = !editMode;
+  this.classList.toggle("on", editMode);
+  this.textContent = editMode ? "✓ DONE" : "✎ EDIT";
+  render();
+};
+document.getElementById("resetBtn").onclick = ()=>{
+  const phases = currentPhases();
+  phases.forEach(p=>p.exercises.forEach((e,i)=> done.delete(keyFor(p,i))));
+  saveDone(); render();
+};
+document.getElementById("factoryBtn").onclick = ()=>{
+  if(confirm("Restore the original V6 routine? This erases your custom edits.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
+};
+document.getElementById("exportBtn").onclick = ()=>{
+  const blob = new Blob([JSON.stringify(DATA,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="my-soccer-cycle.json"; a.click();
+  URL.revokeObjectURL(url);
+};
+document.getElementById("importBtn").onclick = ()=>{
+  const input = document.createElement("input"); input.type="file"; input.accept="application/json";
+  input.onchange = e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try {
+        const data=JSON.parse(ev.target.result);
+        if(data && data.warmup && data.days){ DATA=data; saveData(); render(); alert("Routine imported."); }
+        else alert("That doesn't look like a V6 cycle file.");
+      } catch(err){ alert("Couldn't read that file."); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+};
+document.getElementById("modalCancel").onclick = closeModal;
+document.getElementById("modalSave").onclick = saveModal;
+document.getElementById("modal").onclick = (e)=>{ if(e.target.id==="modal") closeModal(); };
+
+loadData(); loadDone(); render();
+</script>
+</body>
+</html>
