@@ -21,11 +21,10 @@
   .edit-toggle { background: transparent; border: 1px solid #333; color: #888; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 10px; letter-spacing: 2px; font-family: inherit; }
   .edit-toggle.on { border-color: #F97316; color: #F97316; }
 
-  /* Day selector */
   .days { display: flex; gap: 6px; padding: 12px 16px 0; }
   .day { flex: 1; padding: 12px 4px; background: #141414; border: 1px solid #242424; border-radius: 6px; color: #555; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; }
   .day.active { background: #1c1c1c; }
-  .day-letter { font-size: 18px; font-weight: 900; letter-spacing: 0; }
+  .day-letter { font-size: 18px; font-weight: 900; }
   .day-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 2px; color: #555; }
 
   .theme-bar { margin: 12px 16px 0; padding: 8px 14px; border-radius: 6px; font-size: 10px; letter-spacing: 2px; text-align: center; }
@@ -38,14 +37,24 @@
 
   .phase-note { margin: 14px 16px 0; padding: 10px 14px; background: #131313; border: 1px solid #242424; border-radius: 6px; font-size: 10px; color: #888; letter-spacing: 1px; line-height: 1.5; white-space: pre-line; }
 
+  .stamina-controls { margin: 14px 16px 4px; }
+  .sc-label { font-size: 9px; letter-spacing: 2px; color: #666; margin: 10px 0 6px; }
+  .sc-row { display: flex; gap: 6px; }
+  .sc-btn { flex: 1; padding: 9px 2px; background: #141414; border: 1px solid #242424; border-radius: 5px; color: #666; cursor: pointer; font-family: inherit; text-align: center; }
+  .sc-btn.active { background: #16281c; border-color: #22C55E; color: #22C55E; }
+  .sc-btn-lvl { font-size: 15px; font-weight: 900; }
+  .sc-btn-wk { font-size: 7px; letter-spacing: 0.5px; margin-top: 2px; }
+
   .exercises { padding: 12px 16px 0; }
   .card { background: #141414; border: 1px solid #242424; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
   .card.done { background: #111; border-color: #2a2a2a; border-left-color: #333 !important; opacity: 0.5; }
+  .card.noclick { cursor: default; }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
   .card-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .card-name { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
   .card.done .card-name { text-decoration: line-through; color: #444; }
   .knee-tag { font-size: 8px; background: #1a2a1a; color: #4ade80; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #2a4a2a; }
+  .part-tag { font-size: 8px; background: #17251c; color: #22C55E; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #234; }
   .card-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
   .card-time { font-size: 10px; letter-spacing: 1px; }
   .card-gear { font-size: 10px; color: #555; letter-spacing: 1px; }
@@ -59,6 +68,7 @@
   .mini-btn.danger { color: #f87171; border-color: #3a1f1f; }
   .mini-btn:disabled { opacity: 0.3; }
   .add-btn { width: 100%; background: transparent; border: 1px dashed #333; color: #666; padding: 14px; border-radius: 6px; font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
+  .edit-locked { text-align:center; font-size:10px; color:#555; letter-spacing:1px; padding: 6px 0 14px; line-height:1.6; white-space: pre-line; }
 
   .note { margin: 16px; padding: 14px 16px; border-radius: 6px; }
   .note-green { background: #0f1a0f; border: 1px solid #1a3a1a; }
@@ -92,11 +102,11 @@
 <body>
   <div class="header">
     <div class="kicker-row">
-      <span class="kicker">SOCCER COMEBACK — V6</span>
+      <span class="kicker">SOCCER COMEBACK — V8</span>
       <button class="edit-toggle" id="editToggle">✎ EDIT</button>
     </div>
-    <div class="title">4-DAY TRAINING CYCLE</div>
-    <div class="subtitle" id="subtitle">WARM-UP · PT · SPRINT · CONDITIONING</div>
+    <div class="title">OFF-SEASON · 4-DAY CYCLE</div>
+    <div class="subtitle">SPEED ×2 · STAMINA ×2 · SHARED WARM-UP + PT</div>
     <div class="progress-wrap">
       <div class="progress-labels"><span id="progressLabel">DAY A PROGRESS</span><span id="progressCount">0/0 DONE</span></div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -110,19 +120,21 @@
   <div class="exercises" id="exercises"></div>
 
   <div class="note note-green">
-    <div class="note-title">HOW THE CYCLE WORKS</div>
-    <div class="note-body">• Rotate through Workout A → B → C → D, then repeat. Warm-up is the same every day.
+    <div class="note-title">OFF-SEASON PLAN → SEPTEMBER RETURN</div>
+    <div class="note-body">• Rotate A → B → C → D at your own pace. A & C are SPEED (do them fresh). B & D are STAMINA (MatchFit). That's 2 speed + 2 stamina per cycle, 2 stamina sessions per week.
 
-• Each day pairs different PT + sprint work so you never hammer one quality two sessions in a row — better for recovery and the knee.
+• Warm-up and the daily PT set are identical every day. Finish each day with 10-15 min ballwork in your skills app.
 
-• Conditioning is easy Zone 2 (20-30 min) on A, B, C, and one harder Threshold session on D. Keep the Zone 2 days genuinely easy so Day D and your sprint work stay sharp.
+• Zone 2 bike is your morning work, outside this app. CrossFit 2-3x/week — put it on non-stamina days so you're not stacking max efforts.
 
-• Discomfort during adaptation = okay. Sharp pain or swelling = stop.</div>
+• On a stamina day, pick your Session (1-4) and Block (A-D). Cycle all four sessions at a block over ~2 weeks, then bump the block. A → D across 8 weeks peaks you in early September.
+
+• Discomfort during adaptation is okay. Sharp knee pain or swelling means stop.</div>
   </div>
 
   <div class="note note-blue">
-    <div class="note-title">WHAT'S NEW IN V6</div>
-    <div class="note-body">Restructured into a 4-day cycle (A/B/C/D) with a dedicated Sprint section. Your full exercise library is now distributed across the four days for balance instead of stacked into one. Everything stays editable — tap EDIT to add, change, reorder, or delete any exercise on the day you're viewing. Editing the warm-up changes it for every day, since it's shared.</div>
+    <div class="note-title">WHAT'S NEW IN V8</div>
+    <div class="note-body">Reorganized into 2 SPEED days (A, C) and 2 STAMINA days (B, D) so speed and stamina stop competing in the same session. Warm-up and a short PT set are now shared on every day. Stamina days have a Session + Block picker so each can run any of the four MatchFit sessions. No exercises were removed — every sprint, plyo and rehab movement is still here, just re-sorted.</div>
   </div>
 
   <div class="bottom-bar">
@@ -150,9 +162,36 @@
 <script>
 function ex(name, time, gear, cues, knee){ return { name, time, gear: gear||"", cues: cues||"", knee: !!knee }; }
 
+/* ---------- MatchFit Stamina programme (in-season sessions) ---------- */
+function mkDrills(id1, id2, id3){
+  return [
+    { id:id1, part:"PART 1", intensity:"80-95%", rest:"60s rest between sets", reps:{A:6,B:6,C:6,D:6}, sets:{A:5,B:6,C:7,D:8}, note:"There and back = 2 reps. Rest is between sets." },
+    { id:id2, part:"PART 2", intensity:"100%", rest:"90s rest between sets", reps:{A:4,B:5,C:6,D:7}, sets:{A:3,B:3,C:3,D:3}, note:"Walk back between reps, then immediately start the next rep. Rest is between sets." },
+    { id:id3, part:"PART 3", intensity:"100%", rest:"60s rest between sets", reps:{A:4,B:5,C:6,D:7}, sets:{A:2,B:2,C:2,D:2}, note:"20 secs rest between reps. Rest is between sets." },
+  ];
+}
+const STAMINA = {
+  levelWeeks: { A:"WK 1-2", B:"WK 3-4", C:"WK 5-6", D:"WK 7-8" },
+  sessions: {
+    1: { title:"PITCH SESSION 1", equipment:"4-8 markers, 1 ball",  drills: mkDrills("Pitch Drill #35","Pitch Drill #39","Pitch Drill #17") },
+    2: { title:"PITCH SESSION 2", equipment:"6-12 markers, 1 ball", drills: mkDrills("Pitch Drill #36","Pitch Drill #40","Pitch Drill #19") },
+    3: { title:"PITCH SESSION 3", equipment:"8-16 markers, 1 ball", drills: mkDrills("Pitch Drill #37","Pitch Drill #41","Pitch Drill #21") },
+    4: { title:"PITCH SESSION 4", equipment:"10-14 markers, 2 balls", drills: mkDrills("Pitch Drill #38","Pitch Drill #42","Pitch Drill #6") },
+  }
+};
+
+const DAY_META = {
+  A: { label:"WORKOUT A", type:"speed",   theme:"SPEED · ACCELERATION & LINEAR POWER", color:"#3B82F6", tag:"SPEED" },
+  B: { label:"WORKOUT B", type:"stamina", theme:"STAMINA · MATCHFIT PITCH SESSION",    color:"#22C55E", tag:"STAMINA" },
+  C: { label:"WORKOUT C", type:"speed",   theme:"SPEED · TOP SPEED, LATERAL & DECEL",  color:"#8B5CF6", tag:"SPEED" },
+  D: { label:"WORKOUT D", type:"stamina", theme:"STAMINA · MATCHFIT PITCH SESSION",    color:"#22C55E", tag:"STAMINA" },
+};
+
 const DEFAULT_DATA = {
+  staminaSession: 1,
+  staminaBlock: "A",
   warmup: {
-    note: "Same warm-up every day. Run it top to bottom before the day's work.",
+    note: "Same warm-up every day. Run it top to bottom before the day's work. Cool down after every session.",
     exercises: [
       ex("Hip Circle March", "60 sec", "Bodyweight", "March in place, exaggerate hip rotation each step. Loosen the hips, not just the legs.", false),
       ex("Ankle Rolls + Toe Taps", "30 sec each foot", "Bodyweight", "Roll ankles full circles, then tap toes rapidly. Wakes up proprioception — first thing to go after a long break.", false),
@@ -167,82 +206,54 @@ const DEFAULT_DATA = {
       ex("Coin Pickers", "2 x 20 yards", "Bodyweight", "Jog and dip to 'pick up a coin' every few yards — a controlled single-leg hinge. Opens hips and hamstrings.", false),
     ]
   },
-  days: {
-    A: { label: "WORKOUT A", theme: "ACCELERATION / LINEAR POWER", color: "#3B82F6",
-      pt: [
-        ex("Single-Leg Hurdle Hops (Forward)", "3 sets x 10", "Agility hurdles", "On one leg, hop over each hurdle without putting the foot down. Stick each landing for control. (PT HEP)", true),
-        ex("Pogos", "3 sets x 10 reps", "Bodyweight", "Max bounce in place. Stiff ankles, minimal knee bend — pure elastic rebound off the ground.", true),
-        ex("Line Hops", "1 set x 20 hops / Leg", "Bodyweight", "Fast single-leg hops back and forth over a line. Builds ankle stiffness and knee control.", true),
-        ex("Single-Legged Jumps", "3 sets x 5 hops / Leg", "Bodyweight", "Single-leg hops for distance. Stick each landing — this is your single-leg stability work.", true),
-      ],
-      sprint: [
-        ex("A-Skips", "3 x 20m", "Bodyweight", "Skip driving one knee to hip height, opposite arm, quick ground contact. Core sprint mechanics drill.", false),
-        ex("Push-Up Start Sprints", "3 sprints", "Bodyweight", "Start lying in a push-up position, pop up and accelerate hard. 20m. Reaction + acceleration.", false),
-        ex("Kneeling Start Sprints", "3 sprints", "Bodyweight", "From a kneeling start, explode up into a 20m sprint. Trains the drive phase out of a low position.", false),
-      ],
-      conditioning: [
-        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, you could nose-breathe the whole time. Zone 2 heart rate. Zero knee impact, builds your aerobic base. Keep it genuinely easy.", false),
-      ]
-    },
-    B: { label: "WORKOUT B", theme: "LATERAL / MULTIDIRECTIONAL", color: "#8B5CF6",
-      pt: [
-        ex("Ladder In & Out Hops — Single Leg", "3 sets x 10", "Agility ladder", "Stand beside the ladder. On one leg, hop your foot in and out of each square without touching the rungs. Quiet landings. (PT HEP)", true),
-        ex("Lateral Jumps", "5 reps per Leg", "3 cones", "Jump forward to a cone, then to the right/left cone, alternating. Controlled lateral landings.", true),
-        ex("Skater Jumps", "5 sets / Leg", "3 cones", "Zig-zag bounding between cones — L-R-L then R-L-R. Land and stick on one leg each time. Big for lateral knee stability.", true),
-        ex("Multidirectional 1", "1 set / Leg", "Bodyweight", "Single-leg pattern: R - L - R - B, then L - R - L - B. Hop the pattern and stabilize each landing.", true),
-      ],
-      sprint: [
-        ex("B-Skips", "3 sets x 20m", "Bodyweight", "Like an A-skip but extend the lower leg out and 'paw' it back to the ground. Hamstring + sprint mechanics.", false),
-        ex("Flying Sprints", "3 x 20m", "Bodyweight", "Start by hopping, gradually build speed, hit top speed in the last 5 yards, then gradually slow down. No hard stops.", false),
-      ],
-      conditioning: [
-        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, Zone 2 heart rate. Zero knee impact. Keep it genuinely easy so your harder days stay sharp.", false),
-      ]
-    },
-    C: { label: "WORKOUT C", theme: "REACTIVE / ELASTIC POWER", color: "#EC4899",
-      pt: [
-        ex("Ladder Zig-Zag Hops — Single Leg", "3 sets x 10", "Agility ladder", "On one leg, hop into a square then diagonally forward and out, alternating sides down the ladder. (PT HEP)", true),
-        ex("Ladder Skiers", "3 sets x 10", "Agility ladder", "Face the side of the ladder, one foot in the first square. Quickly jump-switch your feet (skiing motion) down the ladder. (PT HEP)", true),
-        ex("Lateral Broad Jumps", "1 set x 20 reps / Leg", "Bodyweight", "Start facing perpendicular, jump and twist 90 degrees, landing balanced. Reactive rotational power.", true),
-        ex("Lateral Jump Backs", "1 x 20 / Leg", "Bodyweight", "Jump laterally, then a quick step back to the middle. Trains quick re-centering and deceleration.", true),
-      ],
-      sprint: [
-        ex("Sprint-Float-Sprint", "3 sprints", "Bodyweight", "30m: sprint 10 yards, 'float' (relax but hold speed) 5 yards, sprint again. Teaches relaxed top speed.", false),
-        ex("Broad Jumps", "2 sets x 4 jumps", "Bodyweight", "Two-foot horizontal jump for max distance. Land soft, absorb through the hips, fully reset each rep.", false),
-        ex("Triple Jump", "2 sets per Leg", "Bodyweight", "Hop - Step - Jump, alternating the lead foot. Horizontal power and single-leg force absorption.", true),
-      ],
-      conditioning: [
-        ex("Zone 2 Cycle", "20-30 min", "Bike", "Steady, easy aerobic effort — conversational pace, Zone 2 heart rate. Zero knee impact. Recovery-paced, keep it easy.", false),
-      ]
-    },
-    D: { label: "WORKOUT D", theme: "DECELERATION / THRESHOLD", color: "#EF4444",
-      pt: [
-        ex("Ladder 2 Forward, 1 Back", "3 sets x 10", "Agility ladder", "Both feet hop into square 1, then 2, then hop one square back. Continue two-forward / one-back down the ladder. (PT HEP)", true),
-        ex("Plyometric Jumps Over Ball", "3 sets x 10", "BOSU ball", "Rounded side up, one foot center, other on the floor. Squat, jump and switch feet across the dome. Alternate every jump. (PT HEP)", true),
-        ex("Multidirectional 2 (One Leg)", "1 set / leg", "Bodyweight", "Single-leg pattern: R - R - R - B, then L - L - L - B. Stabilize every landing on the same leg.", true),
-        ex("Cone Shuffle (moderate)", "4 x 20 sec on / 15 sec rest", "3 cones in a line", "Cones 2 yards apart. Shuffle laterally cone to cone, touch each one. Controlled, change-of-direction conditioning.", true),
-      ],
-      sprint: [
-        ex("Sprint + Brake (Deceleration)", "6 x 8 yards", "Bodyweight or 2 cones", "Sprint 8 yards, stop as controlled as possible. Deceleration is harder on the knees than acceleration — training it is what protects you. Absorb through hips and glutes.", true),
-      ],
-      conditioning: [
-        ex("Threshold Workout", "20-30 min", "Bike or run", "Your one hard cardio day. Comfortably-hard sustained effort near threshold — e.g. 4-5 x 3-4 min hard / 2 min easy, or a steady 20 min tempo. Bike if knees are cranky, run if they feel good. Keep A/B/C truly easy to earn this one.", false),
-      ]
-    }
+  pt: {
+    note: "Daily rehab set — same every day. Keep it controlled and submaximal; frequency is what helps the knee, not intensity. If your PT prescribed a set frequency (e.g. HEP x2, 4x/week), follow their guidance over doing it daily.",
+    exercises: [
+      ex("Single-Leg Hurdle Hops (Forward)", "3 sets x 10", "Agility hurdles", "On one leg, hop over each hurdle without putting the foot down. Stick each landing for control. (PT HEP)", true),
+      ex("Ladder In & Out Hops — Single Leg", "3 sets x 10", "Agility ladder", "Stand beside the ladder. On one leg, hop your foot in and out of each square without touching the rungs. Quiet landings. (PT HEP)", true),
+      ex("Ladder Zig-Zag Hops — Single Leg", "3 sets x 10", "Agility ladder", "On one leg, hop into a square then diagonally forward and out, alternating sides down the ladder. (PT HEP)", true),
+      ex("Ladder Skiers", "3 sets x 10", "Agility ladder", "Face the side of the ladder, one foot in the first square. Quickly jump-switch your feet (skiing motion) down the ladder. (PT HEP)", true),
+      ex("Ladder 2 Forward, 1 Back", "3 sets x 10", "Agility ladder", "Both feet hop into square 1, then 2, then hop one square back. Continue two-forward / one-back down the ladder. (PT HEP)", true),
+      ex("Plyometric Jumps Over Ball", "3 sets x 10", "BOSU ball", "Rounded side up, one foot center, other on the floor. Squat, jump and switch feet across the dome. Alternate every jump. (PT HEP)", true),
+    ]
+  },
+  speed: {
+    A: { exercises: [
+      ex("A-Skips", "3 x 20m", "Bodyweight", "Skip driving one knee to hip height, opposite arm, quick ground contact. Core sprint mechanics drill.", false),
+      ex("Push-Up Start Sprints", "3 sprints", "Bodyweight", "Start lying in a push-up position, pop up and accelerate hard. 20m. Reaction + acceleration.", false),
+      ex("Kneeling Start Sprints", "3 sprints", "Bodyweight", "From a kneeling start, explode up into a 20m sprint. Trains the drive phase out of a low position.", false),
+      ex("Broad Jumps", "2 sets x 4 jumps", "Bodyweight", "Two-foot horizontal jump for max distance. Land soft, absorb through the hips, fully reset each rep.", false),
+      ex("Triple Jump", "2 sets per Leg", "Bodyweight", "Hop - Step - Jump, alternating the lead foot. Horizontal power and single-leg force absorption.", true),
+      ex("Pogos", "3 sets x 10 reps", "Bodyweight", "Max bounce in place. Stiff ankles, minimal knee bend — pure elastic rebound off the ground.", true),
+      ex("Single-Legged Jumps", "3 sets x 5 hops / Leg", "Bodyweight", "Single-leg hops for distance. Stick each landing — this is your single-leg stability work.", true),
+      ex("Line Hops", "1 set x 20 hops / Leg", "Bodyweight", "Fast single-leg hops back and forth over a line. Builds ankle stiffness and knee control.", true),
+    ]},
+    C: { exercises: [
+      ex("B-Skips", "3 sets x 20m", "Bodyweight", "Like an A-skip but extend the lower leg out and 'paw' it back to the ground. Hamstring + sprint mechanics.", false),
+      ex("Flying Sprints", "3 x 20m", "Bodyweight", "Start by hopping, gradually build speed, hit top speed in the last 5 yards, then gradually slow down. No hard stops.", false),
+      ex("Sprint-Float-Sprint", "3 sprints", "Bodyweight", "30m: sprint 10 yards, 'float' (relax but hold speed) 5 yards, sprint again. Teaches relaxed top speed.", false),
+      ex("Sprint + Brake (Deceleration)", "6 x 8 yards", "Bodyweight or 2 cones", "Sprint 8 yards, stop as controlled as possible. Deceleration is harder on the knees than acceleration — training it protects you. Absorb through hips and glutes.", true),
+      ex("Lateral Jumps", "5 reps per Leg", "3 cones", "Jump forward to a cone, then to the right/left cone, alternating. Controlled lateral landings.", true),
+      ex("Skater Jumps", "5 sets / Leg", "3 cones", "Zig-zag bounding between cones — L-R-L then R-L-R. Land and stick on one leg each time. Big for lateral knee stability.", true),
+      ex("Lateral Broad Jumps", "1 set x 20 reps / Leg", "Bodyweight", "Start facing perpendicular, jump and twist 90 degrees, landing balanced. Reactive rotational power.", true),
+      ex("Lateral Jump Backs", "1 x 20 / Leg", "Bodyweight", "Jump laterally, then a quick step back to the middle. Trains quick re-centering and deceleration.", true),
+      ex("Multidirectional 1", "1 set / Leg", "Bodyweight", "Single-leg pattern: R - L - R - B, then L - R - L - B. Hop the pattern and stabilize each landing.", true),
+      ex("Multidirectional 2 (One Leg)", "1 set / leg", "Bodyweight", "Single-leg pattern: R - R - R - B, then L - L - L - B. Stabilize every landing on the same leg.", true),
+      ex("Cone Shuffle (moderate)", "4 x 20 sec on / 15 sec rest", "3 cones in a line", "Cones 2 yards apart. Shuffle laterally cone to cone, touch each one. Controlled change-of-direction work.", true),
+    ]},
   }
 };
 
 const SECTION_META = {
-  warmup:       { id: "warmup",       label: "WARM-UP",      icon: "🔥", color: "#F97316" },
-  pt:           { id: "pt",           label: "PT / REHAB",   icon: "🦵", color: "#14B8A6" },
-  sprint:       { id: "sprint",       label: "SPRINT",       icon: "⚡", color: "#EAB308" },
-  conditioning: { id: "conditioning", label: "CONDITIONING", icon: "🚴", color: "#10B981" },
+  warmup: { id: "warmup", label: "WARM-UP", icon: "🔥", color: "#F97316" },
+  pt:     { id: "pt",     label: "PT / REHAB", icon: "🦵", color: "#14B8A6" },
+  stamina:{ id: "stamina",label: "STAMINA", icon: "🏃", color: "#22C55E" },
 };
 
-const DATA_KEY = "soccerRoutineDataV6";
-const VER_KEY = "soccerRoutineVerV6";
-const VERSION = 6;
-const DONE_KEY = "soccerRoutineDoneV6";
+const DATA_KEY = "soccerRoutineDataV8";
+const VER_KEY = "soccerRoutineVerV8";
+const VERSION = 8;
+const DONE_KEY = "soccerRoutineDoneV8";
 
 let DATA, done, activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
 
@@ -255,6 +266,8 @@ function loadData(){
     if (s && v >= VERSION) { DATA = JSON.parse(s); }
     else { DATA = deepClone(DEFAULT_DATA); saveData(); }
   } catch(e){ DATA = deepClone(DEFAULT_DATA); }
+  if(!DATA.staminaBlock) DATA.staminaBlock = "A";
+  if(!DATA.staminaSession) DATA.staminaSession = 1;
 }
 function saveData(){
   try { localStorage.setItem(DATA_KEY, JSON.stringify(DATA)); localStorage.setItem(VER_KEY, String(VERSION)); } catch(e){}
@@ -262,35 +275,57 @@ function saveData(){
 function loadDone(){ try { const s = localStorage.getItem(DONE_KEY); done = s ? new Set(JSON.parse(s)) : new Set(); } catch(e){ done = new Set(); } }
 function saveDone(){ try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch(e){} }
 
-// Build the 4 live "phase" objects for the active day. Exercise arrays are live references into DATA.
-function currentPhases(){
-  const day = DATA.days[activeDay];
-  return [
-    { ...SECTION_META.warmup,       note: DATA.warmup.note, exercises: DATA.warmup.exercises },
-    { ...SECTION_META.pt,           note: "", exercises: day.pt },
-    { ...SECTION_META.sprint,       note: "", exercises: day.sprint },
-    { ...SECTION_META.conditioning, note: "", exercises: day.conditioning },
-  ];
+function staminaExercises(){
+  const session = STAMINA.sessions[DATA.staminaSession];
+  const lvl = DATA.staminaBlock;
+  return session.drills.map(d => ({
+    name: d.id, part: d.part,
+    time: d.reps[lvl] + " reps · " + d.sets[lvl] + " sets",
+    gear: session.equipment,
+    cues: d.intensity + " intensity · " + d.rest + "\n" + d.note,
+    knee: false, stamina: true,
+  }));
+}
+function staminaNote(){
+  const session = STAMINA.sessions[DATA.staminaSession];
+  return session.title + " · Level " + DATA.staminaBlock + " (" + STAMINA.levelWeeks[DATA.staminaBlock] + ")\nEquipment: " + session.equipment + ". Perform the 3 parts in order. Pick any of the 4 sessions on a stamina day. Based on your MatchFit Football 28-day programme.";
 }
 
-function keyFor(phase, i){ return activeDay + "|" + phase.id + "|" + i; }
+function currentPhases(){
+  const meta = DAY_META[activeDay];
+  const phases = [
+    { ...SECTION_META.warmup, note: DATA.warmup.note, exercises: DATA.warmup.exercises },
+    { ...SECTION_META.pt,     note: DATA.pt.note,     exercises: DATA.pt.exercises },
+  ];
+  if(meta.type === "speed"){
+    phases.push({ id:"speed", label:"SPEED", icon:"⚡", color: meta.color, note:"", exercises: DATA.speed[activeDay].exercises });
+  } else {
+    phases.push({ ...SECTION_META.stamina, note: staminaNote(), exercises: staminaExercises() });
+  }
+  return phases;
+}
+
+function keyFor(phase, i){
+  if(phase.id === "stamina") return activeDay + "|stamina|" + DATA.staminaSession + "|" + DATA.staminaBlock + "|" + i;
+  return activeDay + "|" + phase.id + "|" + i;
+}
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function renderDays(){
   const el = document.getElementById("days"); el.innerHTML = "";
-  Object.keys(DATA.days).forEach(k=>{
-    const d = DATA.days[k];
+  Object.keys(DAY_META).forEach(k=>{
+    const d = DAY_META[k];
     const btn = document.createElement("div");
     btn.className = "day" + (k===activeDay ? " active" : "");
     if(k===activeDay){ btn.style.borderColor = d.color; }
-    btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div><div class="day-sub">${k===activeDay? '● ':''}${d.theme.split(' / ')[0]}</div>`;
+    btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div><div class="day-sub">${d.tag}</div>`;
     btn.onclick = ()=>{ activeDay = k; activePhase = 0; render(); };
     el.appendChild(btn);
   });
 }
 
 function renderThemeBar(){
-  const d = DATA.days[activeDay];
+  const d = DAY_META[activeDay];
   const el = document.getElementById("themeBar");
   el.textContent = d.label + " · " + d.theme;
   el.style.background = d.color + "1a";
@@ -317,31 +352,58 @@ function renderPhaseNote(){
   el.innerHTML = (p.note && p.note.length) ? `<div class="phase-note">${escapeHtml(p.note)}</div>` : "";
 }
 
+function renderStaminaControls(container){
+  const wrap = document.createElement("div");
+  wrap.className = "stamina-controls";
+  let html = `<div class="sc-label">SESSION — pick which pitch session you're doing today</div><div class="sc-row">`;
+  [1,2,3,4].forEach(n=>{
+    const on = DATA.staminaSession === n;
+    html += `<div class="sc-btn ${on?'active':''}" data-sess="${n}"><div class="sc-btn-lvl">${n}</div><div class="sc-btn-wk">SESSION</div></div>`;
+  });
+  html += `</div><div class="sc-label">BLOCK — sets the volume for the 8-week progression</div><div class="sc-row">`;
+  ["A","B","C","D"].forEach(lvl=>{
+    const on = DATA.staminaBlock === lvl;
+    html += `<div class="sc-btn ${on?'active':''}" data-lvl="${lvl}"><div class="sc-btn-lvl">${lvl}</div><div class="sc-btn-wk">${STAMINA.levelWeeks[lvl]}</div></div>`;
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+  wrap.querySelectorAll("[data-sess]").forEach(b=>{ b.onclick = ()=>{ DATA.staminaSession = parseInt(b.dataset.sess,10); saveData(); render(); }; });
+  wrap.querySelectorAll("[data-lvl]").forEach(b=>{ b.onclick = ()=>{ DATA.staminaBlock = b.dataset.lvl; saveData(); render(); }; });
+  container.appendChild(wrap);
+}
+
 function renderExercises(){
   const el = document.getElementById("exercises"); el.innerHTML = "";
   const phase = currentPhases()[activePhase];
+  const isStamina = phase.id === "stamina";
+  if(isStamina) renderStaminaControls(el);
+
   phase.exercises.forEach((exr,i)=>{
     const key = keyFor(phase, i);
     const isDone = done.has(key);
+    const canCheck = !editMode || isStamina;
     const card = document.createElement("div");
-    card.className = "card" + (isDone && !editMode ? " done" : "");
-    card.style.borderLeft = "3px solid " + ((isDone && !editMode) ? "#333" : phase.color);
+    card.className = "card" + (isDone ? " done" : "") + (canCheck ? "" : " noclick");
+    card.style.borderLeft = "3px solid " + (isDone ? "#333" : phase.color);
+    let tags = "";
+    if(exr.stamina && exr.part) tags += `<span class="part-tag">${exr.part}</span>`;
+    if(exr.knee) tags += '<span class="knee-tag">KNEE ✓</span>';
     let html = `
       <div class="card-top">
         <div style="flex:1">
           <div class="card-name-row">
             <span class="card-name">${escapeHtml(exr.name)}</span>
-            ${exr.knee ? '<span class="knee-tag">KNEE ✓</span>' : ''}
+            ${tags}
           </div>
           <div class="card-meta">
             ${exr.time ? `<span class="card-time" style="color:${phase.color}">⏱ ${escapeHtml(exr.time)}</span>` : ''}
             ${exr.gear ? `<span class="card-gear">🎒 ${escapeHtml(exr.gear)}</span>` : ''}
           </div>
         </div>
-        ${editMode ? '' : `<div class="check" style="border-color:${isDone?'#333':phase.color}">${isDone?'✓':''}</div>`}
+        ${canCheck ? `<div class="check" style="border-color:${isDone?'#333':phase.color}">${isDone?'✓':''}</div>` : ''}
       </div>
       <div class="card-cues ${exr.cues ? '' : 'empty'}">${escapeHtml(exr.cues)}</div>`;
-    if(editMode){
+    if(editMode && !isStamina){
       html += `
       <div class="edit-controls">
         <button class="mini-btn" data-act="up" ${i===0?'disabled':''}>▲</button>
@@ -351,18 +413,26 @@ function renderExercises(){
       </div>`;
     }
     card.innerHTML = html;
-    if(editMode){
+    if(editMode && !isStamina){
       card.querySelectorAll(".mini-btn").forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); handleEditAction(b.dataset.act,i); }; });
-    } else {
+    } else if(canCheck){
       card.onclick = ()=>{ done.has(key)?done.delete(key):done.add(key); saveDone(); render(); };
     }
     el.appendChild(card);
   });
+
   if(editMode){
-    const add = document.createElement("button");
-    add.className = "add-btn"; add.textContent = "+ ADD EXERCISE";
-    add.onclick = ()=> openModal(activePhase, null);
-    el.appendChild(add);
+    if(isStamina){
+      const msg = document.createElement("div");
+      msg.className = "edit-locked";
+      msg.textContent = "Stamina follows the fixed MatchFit programme.\nUse the SESSION and BLOCK selectors above.";
+      el.appendChild(msg);
+    } else {
+      const add = document.createElement("button");
+      add.className = "add-btn"; add.textContent = "+ ADD EXERCISE";
+      add.onclick = ()=> openModal(activePhase, null);
+      el.appendChild(add);
+    }
   }
 }
 
@@ -407,7 +477,7 @@ function renderProgress(){
   const phases = currentPhases();
   let total=0, dc=0;
   phases.forEach(p=>p.exercises.forEach((e,i)=>{ total++; if(done.has(keyFor(p,i))) dc++; }));
-  const d = DATA.days[activeDay];
+  const d = DAY_META[activeDay];
   document.getElementById("progressLabel").textContent = "DAY " + activeDay + " PROGRESS";
   document.getElementById("progressCount").textContent = dc + "/" + total + " DONE";
   const fill = document.getElementById("progressFill");
@@ -429,7 +499,7 @@ document.getElementById("resetBtn").onclick = ()=>{
   saveDone(); render();
 };
 document.getElementById("factoryBtn").onclick = ()=>{
-  if(confirm("Restore the original V6 routine? This erases your custom edits.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
+  if(confirm("Restore the original V8 routine? This erases your custom edits.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
 };
 document.getElementById("exportBtn").onclick = ()=>{
   const blob = new Blob([JSON.stringify(DATA,null,2)], {type:"application/json"});
@@ -445,8 +515,8 @@ document.getElementById("importBtn").onclick = ()=>{
     reader.onload=ev=>{
       try {
         const data=JSON.parse(ev.target.result);
-        if(data && data.warmup && data.days){ DATA=data; saveData(); render(); alert("Routine imported."); }
-        else alert("That doesn't look like a V6 cycle file.");
+        if(data && data.warmup && data.pt && data.speed){ if(!data.staminaBlock) data.staminaBlock="A"; if(!data.staminaSession) data.staminaSession=1; DATA=data; saveData(); render(); alert("Routine imported."); }
+        else alert("That doesn't look like a V8 cycle file.");
       } catch(err){ alert("Couldn't read that file."); }
     };
     reader.readAsText(file);
