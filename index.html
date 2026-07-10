@@ -38,30 +38,43 @@
   .phase-note { margin: 14px 16px 0; padding: 10px 14px; background: #131313; border: 1px solid #242424; border-radius: 6px; font-size: 10px; color: #888; letter-spacing: 1px; line-height: 1.5; white-space: pre-line; }
 
   .stamina-controls { margin: 14px 16px 4px; }
+  .prog-banner { margin: 0 0 12px; padding: 11px 13px; background: #0f1a12; border: 1px solid #1e3a28; border-radius: 6px; font-size: 11px; letter-spacing: 1px; color: #7bd39a; line-height: 1.7; }
+  .prog-banner b { color: #22C55E; }
+  .prog-banner .nxt { color: #cfe; }
   .sc-label { font-size: 9px; letter-spacing: 2px; color: #666; margin: 10px 0 6px; }
   .sc-row { display: flex; gap: 6px; }
   .sc-btn { flex: 1; padding: 9px 2px; background: #141414; border: 1px solid #242424; border-radius: 5px; color: #666; cursor: pointer; font-family: inherit; text-align: center; }
   .sc-btn.active { background: #16281c; border-color: #22C55E; color: #22C55E; }
   .sc-btn-lvl { font-size: 15px; font-weight: 900; }
   .sc-btn-wk { font-size: 7px; letter-spacing: 0.5px; margin-top: 2px; }
+  .complete-btn { width: 100%; background: #16281c; border: 1px solid #22C55E; color: #22C55E; padding: 15px; border-radius: 8px; font-size: 12px; letter-spacing: 1.5px; cursor: pointer; font-family: inherit; margin: 6px 0 12px; font-weight: 700; }
+  .complete-btn:active { background: #1d3325; }
 
   .exercises { padding: 12px 16px 0; }
-  .card { background: #141414; border: 1px solid #242424; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-  .card.done { background: #111; border-color: #2a2a2a; border-left-color: #333 !important; opacity: 0.5; }
-  .card.noclick { cursor: default; }
+  .card { background: #141414; border: 1px solid #242424; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; transition: all 0.2s; }
+  .card.done { background: #111; border-color: #2a2a2a; border-left-color: #333 !important; opacity: 0.55; }
+  .card.partial { border-left-color: #F59E0B !important; }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
   .card-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .card-name { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
   .card.done .card-name { text-decoration: line-through; color: #444; }
   .knee-tag { font-size: 8px; background: #1a2a1a; color: #4ade80; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #2a4a2a; }
   .part-tag { font-size: 8px; background: #17251c; color: #22C55E; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #234; }
+  .partial-tag { font-size: 8px; background: #2a2011; color: #F59E0B; padding: 2px 6px; border-radius: 10px; letter-spacing: 1px; border: 1px solid #4a3a1a; }
   .card-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
   .card-time { font-size: 10px; letter-spacing: 1px; }
   .card-gear { font-size: 10px; color: #555; letter-spacing: 1px; }
-  .check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; font-size: 11px; }
-  .card.done .check { border-color: #333 !important; background: #333; }
   .card-cues { font-size: 11px; color: #888; line-height: 1.6; border-top: 1px solid #1e1e1e; padding-top: 8px; margin-top: 4px; white-space: pre-line; }
   .card-cues.empty { display: none; }
+
+  /* sets stepper */
+  .stepper { display: flex; align-items: center; gap: 0; flex-shrink: 0; margin-left: 10px; border: 1px solid #2c2c2c; border-radius: 6px; overflow: hidden; }
+  .step-btn { width: 30px; height: 30px; background: #1c1c1c; border: none; color: #ccc; font-size: 16px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; }
+  .step-btn:active { background: #2a2a2a; }
+  .step-val { min-width: 40px; text-align: center; font-size: 12px; color: #f0f0f0; padding: 0 4px; }
+  .step-val .step-target { color: #666; font-size: 10px; }
+  .step-cap { font-size: 7px; letter-spacing: 1px; color: #555; text-align: center; margin-top: 3px; }
+  .stepper-wrap { display: flex; flex-direction: column; align-items: center; }
 
   .edit-controls { display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #1e1e1e; padding-top: 10px; }
   .mini-btn { flex: 1; background: #1c1c1c; border: 1px solid #2c2c2c; color: #aaa; padding: 7px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
@@ -102,7 +115,7 @@
 <body>
   <div class="header">
     <div class="kicker-row">
-      <span class="kicker">SOCCER COMEBACK — V8</span>
+      <span class="kicker">SOCCER COMEBACK — V9</span>
       <button class="edit-toggle" id="editToggle">✎ EDIT</button>
     </div>
     <div class="title">OFF-SEASON · 4-DAY CYCLE</div>
@@ -121,20 +134,20 @@
 
   <div class="note note-green">
     <div class="note-title">OFF-SEASON PLAN → SEPTEMBER RETURN</div>
-    <div class="note-body">• Rotate A → B → C → D at your own pace. A & C are SPEED (do them fresh). B & D are STAMINA (MatchFit). That's 2 speed + 2 stamina per cycle, 2 stamina sessions per week.
+    <div class="note-body">• Rotate A → B → C → D at your own pace. A & C are SPEED (do them fresh). B & D are STAMINA (MatchFit). 2 stamina sessions per week.
 
-• Warm-up and the daily PT set are identical every day. Finish each day with 10-15 min ballwork in your skills app.
+• Log SETS DONE on each exercise with the − / + counter. Amber = partial (fewer sets than the target), green = complete. It saves automatically.
 
-• Zone 2 bike is your morning work, outside this app. CrossFit 2-3x/week — put it on non-stamina days so you're not stacking max efforts.
+• Stamina days track your place in the programme. The app auto-picks the session you're up to; tap "MARK DONE → ADVANCE" when you finish to move to the next one.
 
-• On a stamina day, pick your Session (1-4) and Block (A-D). Cycle all four sessions at a block over ~2 weeks, then bump the block. A → D across 8 weeks peaks you in early September.
+• Warm-up + daily PT are the same every day. Ballwork in your skills app, Zone 2 bike in the mornings, CrossFit 2-3x on non-stamina days.
 
 • Discomfort during adaptation is okay. Sharp knee pain or swelling means stop.</div>
   </div>
 
   <div class="note note-blue">
-    <div class="note-title">WHAT'S NEW IN V8</div>
-    <div class="note-body">Reorganized into 2 SPEED days (A, C) and 2 STAMINA days (B, D) so speed and stamina stop competing in the same session. Warm-up and a short PT set are now shared on every day. Stamina days have a Session + Block picker so each can run any of the four MatchFit sessions. No exercises were removed — every sprint, plyo and rehab movement is still here, just re-sorted.</div>
+    <div class="note-title">WHAT'S NEW IN V9</div>
+    <div class="note-body">Two additions: (1) every exercise now has a SETS-DONE counter that persists, so you can record when you only got 1 of 3 sets — partial sessions show amber. (2) The stamina tab now tracks where you are in the MatchFit sequence (S1A → S4D), auto-selects the session you're up to, and advances when you mark it complete — no more memorizing whether you're on Session 1 or 2.</div>
   </div>
 
   <div class="bottom-bar">
@@ -162,7 +175,7 @@
 <script>
 function ex(name, time, gear, cues, knee){ return { name, time, gear: gear||"", cues: cues||"", knee: !!knee }; }
 
-/* ---------- MatchFit Stamina programme (in-season sessions) ---------- */
+/* ---------- MatchFit Stamina programme ---------- */
 function mkDrills(id1, id2, id3){
   return [
     { id:id1, part:"PART 1", intensity:"80-95%", rest:"60s rest between sets", reps:{A:6,B:6,C:6,D:6}, sets:{A:5,B:6,C:7,D:8}, note:"There and back = 2 reps. Rest is between sets." },
@@ -179,6 +192,10 @@ const STAMINA = {
     4: { title:"PITCH SESSION 4", equipment:"10-14 markers, 2 balls", drills: mkDrills("Pitch Drill #38","Pitch Drill #42","Pitch Drill #6") },
   }
 };
+const LEVELS = ["A","B","C","D"];
+function seqIndex(session, level){ return LEVELS.indexOf(level)*4 + (session-1); }
+function fromSeq(i){ i=((i%16)+16)%16; return { session:(i%4)+1, level:LEVELS[Math.floor(i/4)] }; }
+function seqLabel(session, level){ return "S" + session + level; }
 
 const DAY_META = {
   A: { label:"WORKOUT A", type:"speed",   theme:"SPEED · ACCELERATION & LINEAR POWER", color:"#3B82F6", tag:"SPEED" },
@@ -190,6 +207,7 @@ const DAY_META = {
 const DEFAULT_DATA = {
   staminaSession: 1,
   staminaBlock: "A",
+  staminaPointer: 0,
   warmup: {
     note: "Same warm-up every day. Run it top to bottom before the day's work. Cool down after every session.",
     exercises: [
@@ -250,12 +268,12 @@ const SECTION_META = {
   stamina:{ id: "stamina",label: "STAMINA", icon: "🏃", color: "#22C55E" },
 };
 
-const DATA_KEY = "soccerRoutineDataV8";
+const DATA_KEY = "soccerRoutineDataV8";  // kept so your exercises + stamina position persist
 const VER_KEY = "soccerRoutineVerV8";
 const VERSION = 8;
-const DONE_KEY = "soccerRoutineDoneV8";
+const SETS_KEY = "soccerRoutineSetsV9";  // new set-logging store
 
-let DATA, done, activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
+let DATA, setsLog = {}, activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
 
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 
@@ -268,12 +286,22 @@ function loadData(){
   } catch(e){ DATA = deepClone(DEFAULT_DATA); }
   if(!DATA.staminaBlock) DATA.staminaBlock = "A";
   if(!DATA.staminaSession) DATA.staminaSession = 1;
+  if(DATA.staminaPointer === undefined || DATA.staminaPointer === null) DATA.staminaPointer = 0;
 }
 function saveData(){
   try { localStorage.setItem(DATA_KEY, JSON.stringify(DATA)); localStorage.setItem(VER_KEY, String(VERSION)); } catch(e){}
 }
-function loadDone(){ try { const s = localStorage.getItem(DONE_KEY); done = s ? new Set(JSON.parse(s)) : new Set(); } catch(e){ done = new Set(); } }
-function saveDone(){ try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch(e){} }
+function loadSets(){ try { setsLog = JSON.parse(localStorage.getItem(SETS_KEY) || "{}") || {}; } catch(e){ setsLog = {}; } }
+function saveSets(){ try { localStorage.setItem(SETS_KEY, JSON.stringify(setsLog)); } catch(e){} }
+
+function parseTarget(t){
+  if(!t) return null;
+  let m = t.match(/(\d+)\s*sets?/i); if(m) return +m[1];
+  m = t.match(/(\d+)\s*sprints?/i); if(m) return +m[1];
+  m = t.match(/^\s*(\d+)\s*x/i); if(m) return +m[1];
+  return null;
+}
+function targetFor(exr){ return exr.stamina ? exr.targetSets : parseTarget(exr.time); }
 
 function staminaExercises(){
   const session = STAMINA.sessions[DATA.staminaSession];
@@ -283,12 +311,12 @@ function staminaExercises(){
     time: d.reps[lvl] + " reps · " + d.sets[lvl] + " sets",
     gear: session.equipment,
     cues: d.intensity + " intensity · " + d.rest + "\n" + d.note,
-    knee: false, stamina: true,
+    knee: false, stamina: true, targetSets: d.sets[lvl],
   }));
 }
 function staminaNote(){
   const session = STAMINA.sessions[DATA.staminaSession];
-  return session.title + " · Level " + DATA.staminaBlock + " (" + STAMINA.levelWeeks[DATA.staminaBlock] + ")\nEquipment: " + session.equipment + ". Perform the 3 parts in order. Pick any of the 4 sessions on a stamina day. Based on your MatchFit Football 28-day programme.";
+  return session.title + " · Level " + DATA.staminaBlock + " (" + STAMINA.levelWeeks[DATA.staminaBlock] + ")\nEquipment: " + session.equipment + ". Perform the 3 parts in order. Based on your MatchFit Football 28-day programme.";
 }
 
 function currentPhases(){
@@ -309,6 +337,8 @@ function keyFor(phase, i){
   if(phase.id === "stamina") return activeDay + "|stamina|" + DATA.staminaSession + "|" + DATA.staminaBlock + "|" + i;
   return activeDay + "|" + phase.id + "|" + i;
 }
+function getSets(key){ return setsLog[key] || 0; }
+function setSets(key, n){ if(n<=0) delete setsLog[key]; else setsLog[key] = n; saveSets(); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function renderDays(){
@@ -319,7 +349,11 @@ function renderDays(){
     btn.className = "day" + (k===activeDay ? " active" : "");
     if(k===activeDay){ btn.style.borderColor = d.color; }
     btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div><div class="day-sub">${d.tag}</div>`;
-    btn.onclick = ()=>{ activeDay = k; activePhase = 0; render(); };
+    btn.onclick = ()=>{
+      activeDay = k; activePhase = 0;
+      if(DAY_META[k].type === "stamina"){ const p=fromSeq(DATA.staminaPointer); DATA.staminaSession=p.session; DATA.staminaBlock=p.level; saveData(); }
+      render();
+    };
     el.appendChild(btn);
   });
 }
@@ -355,12 +389,28 @@ function renderPhaseNote(){
 function renderStaminaControls(container){
   const wrap = document.createElement("div");
   wrap.className = "stamina-controls";
-  let html = `<div class="sc-label">SESSION — pick which pitch session you're doing today</div><div class="sc-row">`;
+
+  const ptr = fromSeq(DATA.staminaPointer);
+  const viewingLabel = seqLabel(DATA.staminaSession, DATA.staminaBlock);
+  const trackedLabel = seqLabel(ptr.session, ptr.level);
+  const nx = fromSeq(seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1);
+  const nextLabel = seqLabel(nx.session, nx.level);
+  const override = viewingLabel !== trackedLabel;
+
+  let banner = `<div class="prog-banner">PROGRESSION TRACKER<br>`;
+  if(override){
+    banner += `Viewing <b>${viewingLabel}</b> <span class="nxt">(override)</span> · Your tracked spot: <b>${trackedLabel}</b>`;
+  } else {
+    banner += `Today: <b>${viewingLabel}</b> · Next after this: <span class="nxt">${nextLabel}</span>`;
+  }
+  banner += `</div>`;
+
+  let html = banner + `<div class="sc-label">SESSION — which pitch session today</div><div class="sc-row">`;
   [1,2,3,4].forEach(n=>{
     const on = DATA.staminaSession === n;
     html += `<div class="sc-btn ${on?'active':''}" data-sess="${n}"><div class="sc-btn-lvl">${n}</div><div class="sc-btn-wk">SESSION</div></div>`;
   });
-  html += `</div><div class="sc-label">BLOCK — sets the volume for the 8-week progression</div><div class="sc-row">`;
+  html += `</div><div class="sc-label">BLOCK — volume level for the 8-week progression</div><div class="sc-row">`;
   ["A","B","C","D"].forEach(lvl=>{
     const on = DATA.staminaBlock === lvl;
     html += `<div class="sc-btn ${on?'active':''}" data-lvl="${lvl}"><div class="sc-btn-lvl">${lvl}</div><div class="sc-btn-wk">${STAMINA.levelWeeks[lvl]}</div></div>`;
@@ -372,6 +422,18 @@ function renderStaminaControls(container){
   container.appendChild(wrap);
 }
 
+function stepperHtml(n, target){
+  const valTarget = target ? `<span class="step-target">/${target}</span>` : "";
+  return `<div class="stepper-wrap">
+      <div class="stepper">
+        <button class="step-btn" data-step="dec">−</button>
+        <div class="step-val">${n}${valTarget}</div>
+        <button class="step-btn" data-step="inc">+</button>
+      </div>
+      <div class="step-cap">SETS DONE</div>
+    </div>`;
+}
+
 function renderExercises(){
   const el = document.getElementById("exercises"); el.innerHTML = "";
   const phase = currentPhases()[activePhase];
@@ -380,14 +442,20 @@ function renderExercises(){
 
   phase.exercises.forEach((exr,i)=>{
     const key = keyFor(phase, i);
-    const isDone = done.has(key);
-    const canCheck = !editMode || isStamina;
+    const target = targetFor(exr);
+    const n = getSets(key);
+    const fully = target ? (n >= target) : (n >= 1);
+    const partial = target ? (n > 0 && n < target) : false;
+
     const card = document.createElement("div");
-    card.className = "card" + (isDone ? " done" : "") + (canCheck ? "" : " noclick");
-    card.style.borderLeft = "3px solid " + (isDone ? "#333" : phase.color);
+    card.className = "card" + (fully ? " done" : (partial ? " partial" : ""));
+    card.style.borderLeft = "3px solid " + (fully ? "#333" : (partial ? "#F59E0B" : phase.color));
+
     let tags = "";
     if(exr.stamina && exr.part) tags += `<span class="part-tag">${exr.part}</span>`;
     if(exr.knee) tags += '<span class="knee-tag">KNEE ✓</span>';
+    if(partial) tags += `<span class="partial-tag">PARTIAL ${n}/${target}</span>`;
+
     let html = `
       <div class="card-top">
         <div style="flex:1">
@@ -400,9 +468,10 @@ function renderExercises(){
             ${exr.gear ? `<span class="card-gear">🎒 ${escapeHtml(exr.gear)}</span>` : ''}
           </div>
         </div>
-        ${canCheck ? `<div class="check" style="border-color:${isDone?'#333':phase.color}">${isDone?'✓':''}</div>` : ''}
+        ${editMode && !isStamina ? '' : stepperHtml(n, target)}
       </div>
       <div class="card-cues ${exr.cues ? '' : 'empty'}">${escapeHtml(exr.cues)}</div>`;
+
     if(editMode && !isStamina){
       html += `
       <div class="edit-controls">
@@ -413,13 +482,40 @@ function renderExercises(){
       </div>`;
     }
     card.innerHTML = html;
+
+    // sets stepper handlers
+    card.querySelectorAll("[data-step]").forEach(b=>{
+      b.onclick = (e)=>{
+        e.stopPropagation();
+        let cur = getSets(key);
+        const cap = target || 99;
+        if(b.dataset.step === "inc") cur = Math.min(cap, cur + 1);
+        else cur = Math.max(0, cur - 1);
+        setSets(key, cur); render();
+      };
+    });
     if(editMode && !isStamina){
       card.querySelectorAll(".mini-btn").forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); handleEditAction(b.dataset.act,i); }; });
-    } else if(canCheck){
-      card.onclick = ()=>{ done.has(key)?done.delete(key):done.add(key); saveDone(); render(); };
     }
     el.appendChild(card);
   });
+
+  if(isStamina && !editMode){
+    const viewingLabel = seqLabel(DATA.staminaSession, DATA.staminaBlock);
+    const nx = fromSeq(seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1);
+    const nextLabel = seqLabel(nx.session, nx.level);
+    const btn = document.createElement("button");
+    btn.className = "complete-btn";
+    btn.textContent = "✓ MARK " + viewingLabel + " DONE  →  ADVANCE TO " + nextLabel;
+    btn.onclick = ()=>{
+      const nextIdx = (seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1) % 16;
+      DATA.staminaPointer = nextIdx;
+      const p = fromSeq(nextIdx);
+      DATA.staminaSession = p.session; DATA.staminaBlock = p.level;
+      saveData(); render();
+    };
+    el.appendChild(btn);
+  }
 
   if(editMode){
     if(isStamina){
@@ -475,11 +571,16 @@ function saveModal(){
 
 function renderProgress(){
   const phases = currentPhases();
-  let total=0, dc=0;
-  phases.forEach(p=>p.exercises.forEach((e,i)=>{ total++; if(done.has(keyFor(p,i))) dc++; }));
+  let total=0, dc=0, partials=0;
+  phases.forEach(p=>p.exercises.forEach((e,i)=>{
+    total++;
+    const key = keyFor(p,i); const t = targetFor(e); const n = getSets(key);
+    if(t ? n>=t : n>=1) dc++;
+    else if(n>0) partials++;
+  }));
   const d = DAY_META[activeDay];
   document.getElementById("progressLabel").textContent = "DAY " + activeDay + " PROGRESS";
-  document.getElementById("progressCount").textContent = dc + "/" + total + " DONE";
+  document.getElementById("progressCount").textContent = dc + "/" + total + " DONE" + (partials? " · " + partials + " PARTIAL" : "");
   const fill = document.getElementById("progressFill");
   fill.style.width = (total ? Math.round((dc/total)*100) : 0) + "%";
   fill.style.background = d.color;
@@ -495,11 +596,11 @@ document.getElementById("editToggle").onclick = function(){
 };
 document.getElementById("resetBtn").onclick = ()=>{
   const phases = currentPhases();
-  phases.forEach(p=>p.exercises.forEach((e,i)=> done.delete(keyFor(p,i))));
-  saveDone(); render();
+  phases.forEach(p=>p.exercises.forEach((e,i)=> delete setsLog[keyFor(p,i)]));
+  saveSets(); render();
 };
 document.getElementById("factoryBtn").onclick = ()=>{
-  if(confirm("Restore the original V8 routine? This erases your custom edits.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
+  if(confirm("Restore the original routine? This erases your custom edits and stamina position.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
 };
 document.getElementById("exportBtn").onclick = ()=>{
   const blob = new Blob([JSON.stringify(DATA,null,2)], {type:"application/json"});
@@ -515,8 +616,12 @@ document.getElementById("importBtn").onclick = ()=>{
     reader.onload=ev=>{
       try {
         const data=JSON.parse(ev.target.result);
-        if(data && data.warmup && data.pt && data.speed){ if(!data.staminaBlock) data.staminaBlock="A"; if(!data.staminaSession) data.staminaSession=1; DATA=data; saveData(); render(); alert("Routine imported."); }
-        else alert("That doesn't look like a V8 cycle file.");
+        if(data && data.warmup && data.pt && data.speed){
+          if(!data.staminaBlock) data.staminaBlock="A";
+          if(!data.staminaSession) data.staminaSession=1;
+          if(data.staminaPointer===undefined||data.staminaPointer===null) data.staminaPointer=0;
+          DATA=data; saveData(); render(); alert("Routine imported.");
+        } else alert("That doesn't look like a cycle file.");
       } catch(err){ alert("Couldn't read that file."); }
     };
     reader.readAsText(file);
@@ -527,7 +632,7 @@ document.getElementById("modalCancel").onclick = closeModal;
 document.getElementById("modalSave").onclick = saveModal;
 document.getElementById("modal").onclick = (e)=>{ if(e.target.id==="modal") closeModal(); };
 
-loadData(); loadDone(); render();
+loadData(); loadSets(); render();
 </script>
 </body>
 </html>
