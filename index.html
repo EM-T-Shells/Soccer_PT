@@ -22,10 +22,12 @@
   .edit-toggle.on { border-color: #F97316; color: #F97316; }
 
   .days { display: flex; gap: 6px; padding: 12px 16px 0; }
-  .day { flex: 1; padding: 12px 4px; background: #141414; border: 1px solid #242424; border-radius: 6px; color: #555; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; }
+  .day { flex: 1; padding: 10px 4px; background: #141414; border: 1px solid #242424; border-radius: 6px; color: #555; cursor: pointer; font-family: inherit; text-align: center; transition: all 0.2s; position: relative; }
   .day.active { background: #1c1c1c; }
+  .day.tracked { box-shadow: inset 0 2px 0 0 currentColor; }
   .day-letter { font-size: 18px; font-weight: 900; }
   .day-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 2px; color: #555; }
+  .day-now { font-size: 7px; letter-spacing: 1px; margin-top: 3px; font-weight: 700; }
 
   .theme-bar { margin: 12px 16px 0; padding: 8px 14px; border-radius: 6px; font-size: 10px; letter-spacing: 2px; text-align: center; }
 
@@ -49,9 +51,12 @@
   .sc-btn-wk { font-size: 7px; letter-spacing: 0.5px; margin-top: 2px; }
   .complete-btn { width: 100%; background: #16281c; border: 1px solid #22C55E; color: #22C55E; padding: 15px; border-radius: 8px; font-size: 12px; letter-spacing: 1.5px; cursor: pointer; font-family: inherit; margin: 6px 0 12px; font-weight: 700; }
   .complete-btn:active { background: #1d3325; }
+  .finish-btn { width: 100%; background: #141414; padding: 15px; border-radius: 8px; font-size: 12px; letter-spacing: 1.5px; cursor: pointer; font-family: inherit; margin: 4px 0 12px; font-weight: 700; }
+  .finish-btn:active { filter: brightness(1.3); }
 
   .exercises { padding: 12px 16px 0; }
   .card { background: #141414; border: 1px solid #242424; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; transition: all 0.2s; }
+  .card.clickable { cursor: pointer; }
   .card.done { background: #111; border-color: #2a2a2a; border-left-color: #333 !important; opacity: 0.55; }
   .card.partial { border-left-color: #F59E0B !important; }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
@@ -67,7 +72,9 @@
   .card-cues { font-size: 11px; color: #888; line-height: 1.6; border-top: 1px solid #1e1e1e; padding-top: 8px; margin-top: 4px; white-space: pre-line; }
   .card-cues.empty { display: none; }
 
-  /* sets stepper */
+  .check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; font-size: 12px; }
+  .card.done .check { border-color: #333 !important; background: #333; }
+
   .stepper { display: flex; align-items: center; gap: 0; flex-shrink: 0; margin-left: 10px; border: 1px solid #2c2c2c; border-radius: 6px; overflow: hidden; }
   .step-btn { width: 30px; height: 30px; background: #1c1c1c; border: none; color: #ccc; font-size: 16px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; }
   .step-btn:active { background: #2a2a2a; }
@@ -115,7 +122,7 @@
 <body>
   <div class="header">
     <div class="kicker-row">
-      <span class="kicker">SOCCER COMEBACK — V9</span>
+      <span class="kicker">SOCCER COMEBACK — V10</span>
       <button class="edit-toggle" id="editToggle">✎ EDIT</button>
     </div>
     <div class="title">OFF-SEASON · 4-DAY CYCLE</div>
@@ -134,20 +141,18 @@
 
   <div class="note note-green">
     <div class="note-title">OFF-SEASON PLAN → SEPTEMBER RETURN</div>
-    <div class="note-body">• Rotate A → B → C → D at your own pace. A & C are SPEED (do them fresh). B & D are STAMINA (MatchFit). 2 stamina sessions per week.
+    <div class="note-body">• The day marked ● NOW is where you're up to in the A → B → C → D rotation. Do that day, then tap FINISH DAY at the bottom to advance to the next one.
 
-• Log SETS DONE on each exercise with the − / + counter. Amber = partial (fewer sets than the target), green = complete. It saves automatically.
+• Warm-up, PT and speed exercises: tap to check done. Stamina drills: log SETS DONE with the − / + counter (amber = partial, green = complete).
 
-• Stamina days track your place in the programme. The app auto-picks the session you're up to; tap "MARK DONE → ADVANCE" when you finish to move to the next one.
+• Stamina has its own separate tracker — the SESSION/BLOCK it's up to advances only when you tap MARK DONE on the stamina tab. Finishing a day does not touch it.
 
-• Warm-up + daily PT are the same every day. Ballwork in your skills app, Zone 2 bike in the mornings, CrossFit 2-3x on non-stamina days.
-
-• Discomfort during adaptation is okay. Sharp knee pain or swelling means stop.</div>
+• Ballwork in your skills app, Zone 2 bike in the mornings, CrossFit 2-3x on non-stamina days. Sharp knee pain or swelling means stop.</div>
   </div>
 
   <div class="note note-blue">
-    <div class="note-title">WHAT'S NEW IN V9</div>
-    <div class="note-body">Two additions: (1) every exercise now has a SETS-DONE counter that persists, so you can record when you only got 1 of 3 sets — partial sessions show amber. (2) The stamina tab now tracks where you are in the MatchFit sequence (S1A → S4D), auto-selects the session you're up to, and advances when you mark it complete — no more memorizing whether you're on Session 1 or 2.</div>
+    <div class="note-title">WHAT'S NEW IN V10</div>
+    <div class="note-body">The A/B/C/D rotation now tracks which day you're on (● NOW badge) with a FINISH DAY button that moves you to the next day and clears that day's checks for next time. It's fully independent of the stamina tracker. Non-stamina exercises are back to a simple done check; the sets counter now lives only on the stamina drills.</div>
   </div>
 
   <div class="bottom-bar">
@@ -197,6 +202,9 @@ function seqIndex(session, level){ return LEVELS.indexOf(level)*4 + (session-1);
 function fromSeq(i){ i=((i%16)+16)%16; return { session:(i%4)+1, level:LEVELS[Math.floor(i/4)] }; }
 function seqLabel(session, level){ return "S" + session + level; }
 
+const DAY_ORDER = ["A","B","C","D"];
+function nextDay(k){ return DAY_ORDER[(DAY_ORDER.indexOf(k)+1)%4]; }
+
 const DAY_META = {
   A: { label:"WORKOUT A", type:"speed",   theme:"SPEED · ACCELERATION & LINEAR POWER", color:"#3B82F6", tag:"SPEED" },
   B: { label:"WORKOUT B", type:"stamina", theme:"STAMINA · MATCHFIT PITCH SESSION",    color:"#22C55E", tag:"STAMINA" },
@@ -208,6 +216,7 @@ const DEFAULT_DATA = {
   staminaSession: 1,
   staminaBlock: "A",
   staminaPointer: 0,
+  dayPointer: "A",
   warmup: {
     note: "Same warm-up every day. Run it top to bottom before the day's work. Cool down after every session.",
     exercises: [
@@ -268,12 +277,13 @@ const SECTION_META = {
   stamina:{ id: "stamina",label: "STAMINA", icon: "🏃", color: "#22C55E" },
 };
 
-const DATA_KEY = "soccerRoutineDataV8";  // kept so your exercises + stamina position persist
+const DATA_KEY = "soccerRoutineDataV8";  // kept so your exercises + trackers persist
 const VER_KEY = "soccerRoutineVerV8";
 const VERSION = 8;
-const SETS_KEY = "soccerRoutineSetsV9";  // new set-logging store
+const SETS_KEY = "soccerRoutineSetsV9";  // stamina set-logging
+const DONE_KEY = "soccerRoutineDoneV10"; // non-stamina simple checks
 
-let DATA, setsLog = {}, activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
+let DATA, setsLog = {}, doneSet = new Set(), activeDay = "A", activePhase = 0, editMode = false, editTarget = null;
 
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 
@@ -287,12 +297,15 @@ function loadData(){
   if(!DATA.staminaBlock) DATA.staminaBlock = "A";
   if(!DATA.staminaSession) DATA.staminaSession = 1;
   if(DATA.staminaPointer === undefined || DATA.staminaPointer === null) DATA.staminaPointer = 0;
+  if(!DATA.dayPointer) DATA.dayPointer = "A";
 }
 function saveData(){
   try { localStorage.setItem(DATA_KEY, JSON.stringify(DATA)); localStorage.setItem(VER_KEY, String(VERSION)); } catch(e){}
 }
 function loadSets(){ try { setsLog = JSON.parse(localStorage.getItem(SETS_KEY) || "{}") || {}; } catch(e){ setsLog = {}; } }
 function saveSets(){ try { localStorage.setItem(SETS_KEY, JSON.stringify(setsLog)); } catch(e){} }
+function loadDone(){ try { doneSet = new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch(e){ doneSet = new Set(); } }
+function saveDone(){ try { localStorage.setItem(DONE_KEY, JSON.stringify([...doneSet])); } catch(e){} }
 
 function parseTarget(t){
   if(!t) return null;
@@ -301,7 +314,6 @@ function parseTarget(t){
   m = t.match(/^\s*(\d+)\s*x/i); if(m) return +m[1];
   return null;
 }
-function targetFor(exr){ return exr.stamina ? exr.targetSets : parseTarget(exr.time); }
 
 function staminaExercises(){
   const session = STAMINA.sessions[DATA.staminaSession];
@@ -341,17 +353,23 @@ function getSets(key){ return setsLog[key] || 0; }
 function setSets(key, n){ if(n<=0) delete setsLog[key]; else setsLog[key] = n; saveSets(); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+function syncStaminaView(){ const p=fromSeq(DATA.staminaPointer); DATA.staminaSession=p.session; DATA.staminaBlock=p.level; }
+
 function renderDays(){
   const el = document.getElementById("days"); el.innerHTML = "";
   Object.keys(DAY_META).forEach(k=>{
     const d = DAY_META[k];
+    const tracked = (k === DATA.dayPointer);
     const btn = document.createElement("div");
-    btn.className = "day" + (k===activeDay ? " active" : "");
+    btn.className = "day" + (k===activeDay ? " active" : "") + (tracked ? " tracked" : "");
     if(k===activeDay){ btn.style.borderColor = d.color; }
-    btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div><div class="day-sub">${d.tag}</div>`;
+    if(tracked){ btn.style.color = d.color; }
+    btn.innerHTML = `<div class="day-letter" style="color:${k===activeDay?d.color:'#666'}">${k}</div>`
+      + `<div class="day-sub">${d.tag}</div>`
+      + (tracked ? `<div class="day-now" style="color:${d.color}">● NOW</div>` : `<div class="day-now" style="color:#2a2a2a">—</div>`);
     btn.onclick = ()=>{
       activeDay = k; activePhase = 0;
-      if(DAY_META[k].type === "stamina"){ const p=fromSeq(DATA.staminaPointer); DATA.staminaSession=p.session; DATA.staminaBlock=p.level; saveData(); }
+      if(DAY_META[k].type === "stamina"){ syncStaminaView(); saveData(); }
       render();
     };
     el.appendChild(btn);
@@ -389,7 +407,6 @@ function renderPhaseNote(){
 function renderStaminaControls(container){
   const wrap = document.createElement("div");
   wrap.className = "stamina-controls";
-
   const ptr = fromSeq(DATA.staminaPointer);
   const viewingLabel = seqLabel(DATA.staminaSession, DATA.staminaBlock);
   const trackedLabel = seqLabel(ptr.session, ptr.level);
@@ -397,12 +414,10 @@ function renderStaminaControls(container){
   const nextLabel = seqLabel(nx.session, nx.level);
   const override = viewingLabel !== trackedLabel;
 
-  let banner = `<div class="prog-banner">PROGRESSION TRACKER<br>`;
-  if(override){
-    banner += `Viewing <b>${viewingLabel}</b> <span class="nxt">(override)</span> · Your tracked spot: <b>${trackedLabel}</b>`;
-  } else {
-    banner += `Today: <b>${viewingLabel}</b> · Next after this: <span class="nxt">${nextLabel}</span>`;
-  }
+  let banner = `<div class="prog-banner">STAMINA TRACKER<br>`;
+  banner += override
+    ? `Viewing <b>${viewingLabel}</b> <span class="nxt">(override)</span> · Tracked spot: <b>${trackedLabel}</b>`
+    : `Today: <b>${viewingLabel}</b> · Next after this: <span class="nxt">${nextLabel}</span>`;
   banner += `</div>`;
 
   let html = banner + `<div class="sc-label">SESSION — which pitch session today</div><div class="sc-row">`;
@@ -442,19 +457,29 @@ function renderExercises(){
 
   phase.exercises.forEach((exr,i)=>{
     const key = keyFor(phase, i);
-    const target = targetFor(exr);
-    const n = getSets(key);
-    const fully = target ? (n >= target) : (n >= 1);
-    const partial = target ? (n > 0 && n < target) : false;
+    let fully, partial, rightSide;
+
+    if(isStamina){
+      const target = exr.targetSets;
+      const n = getSets(key);
+      fully = target ? (n >= target) : (n >= 1);
+      partial = target ? (n > 0 && n < target) : false;
+      rightSide = (editMode) ? '' : stepperHtml(n, target);
+    } else {
+      fully = doneSet.has(key);
+      partial = false;
+      rightSide = (editMode) ? '' : `<div class="check" style="border-color:${fully?'#333':phase.color}">${fully?'✓':''}</div>`;
+    }
 
     const card = document.createElement("div");
-    card.className = "card" + (fully ? " done" : (partial ? " partial" : ""));
+    const clickable = !isStamina && !editMode;
+    card.className = "card" + (fully ? " done" : (partial ? " partial" : "")) + (clickable ? " clickable" : "");
     card.style.borderLeft = "3px solid " + (fully ? "#333" : (partial ? "#F59E0B" : phase.color));
 
     let tags = "";
     if(exr.stamina && exr.part) tags += `<span class="part-tag">${exr.part}</span>`;
     if(exr.knee) tags += '<span class="knee-tag">KNEE ✓</span>';
-    if(partial) tags += `<span class="partial-tag">PARTIAL ${n}/${target}</span>`;
+    if(partial) tags += `<span class="partial-tag">PARTIAL ${getSets(key)}/${exr.targetSets}</span>`;
 
     let html = `
       <div class="card-top">
@@ -468,7 +493,7 @@ function renderExercises(){
             ${exr.gear ? `<span class="card-gear">🎒 ${escapeHtml(exr.gear)}</span>` : ''}
           </div>
         </div>
-        ${editMode && !isStamina ? '' : stepperHtml(n, target)}
+        ${rightSide}
       </div>
       <div class="card-cues ${exr.cues ? '' : 'empty'}">${escapeHtml(exr.cues)}</div>`;
 
@@ -483,36 +508,34 @@ function renderExercises(){
     }
     card.innerHTML = html;
 
-    // sets stepper handlers
-    card.querySelectorAll("[data-step]").forEach(b=>{
-      b.onclick = (e)=>{
-        e.stopPropagation();
-        let cur = getSets(key);
-        const cap = target || 99;
-        if(b.dataset.step === "inc") cur = Math.min(cap, cur + 1);
-        else cur = Math.max(0, cur - 1);
-        setSets(key, cur); render();
-      };
-    });
+    if(isStamina && !editMode){
+      card.querySelectorAll("[data-step]").forEach(b=>{
+        b.onclick = (e)=>{
+          e.stopPropagation();
+          let cur = getSets(key); const cap = exr.targetSets || 99;
+          cur = (b.dataset.step === "inc") ? Math.min(cap, cur + 1) : Math.max(0, cur - 1);
+          setSets(key, cur); render();
+        };
+      });
+    } else if(clickable){
+      card.onclick = ()=>{ doneSet.has(key) ? doneSet.delete(key) : doneSet.add(key); saveDone(); render(); };
+    }
     if(editMode && !isStamina){
       card.querySelectorAll(".mini-btn").forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); handleEditAction(b.dataset.act,i); }; });
     }
     el.appendChild(card);
   });
 
+  // Stamina "mark done → advance" button (its own tracker)
   if(isStamina && !editMode){
     const viewingLabel = seqLabel(DATA.staminaSession, DATA.staminaBlock);
     const nx = fromSeq(seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1);
-    const nextLabel = seqLabel(nx.session, nx.level);
     const btn = document.createElement("button");
     btn.className = "complete-btn";
-    btn.textContent = "✓ MARK " + viewingLabel + " DONE  →  ADVANCE TO " + nextLabel;
+    btn.textContent = "✓ MARK " + viewingLabel + " DONE  →  ADVANCE TO " + seqLabel(nx.session, nx.level);
     btn.onclick = ()=>{
-      const nextIdx = (seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1) % 16;
-      DATA.staminaPointer = nextIdx;
-      const p = fromSeq(nextIdx);
-      DATA.staminaSession = p.session; DATA.staminaBlock = p.level;
-      saveData(); render();
+      DATA.staminaPointer = (seqIndex(DATA.staminaSession, DATA.staminaBlock) + 1) % 16;
+      syncStaminaView(); saveData(); render();
     };
     el.appendChild(btn);
   }
@@ -529,6 +552,27 @@ function renderExercises(){
       add.onclick = ()=> openModal(activePhase, null);
       el.appendChild(add);
     }
+  }
+
+  // Day rotation "finish day → next" button (separate tracker), shown when not editing
+  if(!editMode){
+    const nd = nextDay(activeDay);
+    const d = DAY_META[activeDay];
+    const fbtn = document.createElement("button");
+    fbtn.className = "finish-btn";
+    fbtn.style.border = "1px solid " + d.color;
+    fbtn.style.color = d.color;
+    fbtn.textContent = "✓ FINISH DAY " + activeDay + "  →  START DAY " + nd;
+    fbtn.onclick = ()=>{
+      // clear this day's checks/sets so it's fresh next rotation
+      currentPhases().forEach(p=>p.exercises.forEach((e,i)=>{ const k=keyFor(p,i); doneSet.delete(k); delete setsLog[k]; }));
+      saveDone(); saveSets();
+      DATA.dayPointer = nd; activeDay = nd; activePhase = 0;
+      if(DAY_META[nd].type === "stamina") syncStaminaView();
+      saveData(); render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    el.appendChild(fbtn);
   }
 }
 
@@ -574,9 +618,13 @@ function renderProgress(){
   let total=0, dc=0, partials=0;
   phases.forEach(p=>p.exercises.forEach((e,i)=>{
     total++;
-    const key = keyFor(p,i); const t = targetFor(e); const n = getSets(key);
-    if(t ? n>=t : n>=1) dc++;
-    else if(n>0) partials++;
+    const key = keyFor(p,i);
+    if(p.id === "stamina"){
+      const t = e.targetSets; const n = getSets(key);
+      if(t ? n>=t : n>=1) dc++; else if(n>0) partials++;
+    } else {
+      if(doneSet.has(key)) dc++;
+    }
   }));
   const d = DAY_META[activeDay];
   document.getElementById("progressLabel").textContent = "DAY " + activeDay + " PROGRESS";
@@ -595,12 +643,11 @@ document.getElementById("editToggle").onclick = function(){
   render();
 };
 document.getElementById("resetBtn").onclick = ()=>{
-  const phases = currentPhases();
-  phases.forEach(p=>p.exercises.forEach((e,i)=> delete setsLog[keyFor(p,i)]));
-  saveSets(); render();
+  currentPhases().forEach(p=>p.exercises.forEach((e,i)=>{ const k=keyFor(p,i); doneSet.delete(k); delete setsLog[k]; }));
+  saveDone(); saveSets(); render();
 };
 document.getElementById("factoryBtn").onclick = ()=>{
-  if(confirm("Restore the original routine? This erases your custom edits and stamina position.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
+  if(confirm("Restore the original routine? This erases your custom edits and trackers.")){ DATA=deepClone(DEFAULT_DATA); saveData(); render(); }
 };
 document.getElementById("exportBtn").onclick = ()=>{
   const blob = new Blob([JSON.stringify(DATA,null,2)], {type:"application/json"});
@@ -620,6 +667,7 @@ document.getElementById("importBtn").onclick = ()=>{
           if(!data.staminaBlock) data.staminaBlock="A";
           if(!data.staminaSession) data.staminaSession=1;
           if(data.staminaPointer===undefined||data.staminaPointer===null) data.staminaPointer=0;
+          if(!data.dayPointer) data.dayPointer="A";
           DATA=data; saveData(); render(); alert("Routine imported.");
         } else alert("That doesn't look like a cycle file.");
       } catch(err){ alert("Couldn't read that file."); }
@@ -632,7 +680,10 @@ document.getElementById("modalCancel").onclick = closeModal;
 document.getElementById("modalSave").onclick = saveModal;
 document.getElementById("modal").onclick = (e)=>{ if(e.target.id==="modal") closeModal(); };
 
-loadData(); loadSets(); render();
+loadData(); loadSets(); loadDone();
+activeDay = DATA.dayPointer;
+if(DAY_META[activeDay].type === "stamina") syncStaminaView();
+render();
 </script>
 </body>
 </html>
